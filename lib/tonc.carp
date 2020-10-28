@@ -1,0 +1,47 @@
+(system-include "tonc.h")
+(load "./light-core.carp")
+(load "./define-c.carp")
+
+(deftemplate unsafe-set (Fn [(Ptr p) v] ()) "INLINE void $NAME(volatile $p *p, $v v)" "$DECL { *p = ($p)v; }")
+
+(define-c "int __qran_seed = 0")
+(defmodule Rand
+  (deftemplate set-seed (Fn [Int] ()) "INLINE void $NAME(int v)" "$DECL { __qran_seed = v; }")
+  (register range (Fn [Int Int] Int) "qran_range"))
+
+(register-type Color "COLOR")
+(defmodule Color
+  (deftemplate copy (Fn [(Ref Color)] Color) "INLINE COLOR $NAME(COLOR *p)" " $DECL { return *p; }")
+  (implements copy Color.copy)
+  (register rgb15 (Fn [Int Int Int] Color) "RGB15")
+  (register black Color "CLR_BLACK"))
+
+(defmodule M3
+  (register fill (Fn [Color] ()) "m3_fill")
+  (register rect (Fn [Int Int Int Int Color] ()) "m3_rect")
+  (register clear (Fn [] ()) "M3_CLEAR")
+  (register plot (Fn [Int Int Color] ()) "m3_plot"))
+
+(defmodule Display
+  (register control (Ptr Int) "&REG_DISPCNT")
+  (defn set-control [val] (unsafe-set control val))
+  (register mode3 Uint16 "DCNT_MODE3")
+  (register background2 Uint16 "DCNT_BG2"))
+
+(defmodule Video
+  (register vsync (Fn [] ()) "vid_vsync"))
+
+(register-type Key "u32")
+(defmodule Key
+  (register A Key "KEY_A")
+  (register B Key "KEY_A")
+  (register L Key "KEY_L")
+  (register R Key "KEY_R")
+  (register Right Key "KEY_RIGHT")
+  (register Left Key "KEY_LEFT")
+  (register Up Key "KEY_UP")
+  (register Down Key "KEY_DOWN")
+
+  (register poll (Fn [] ()) "key_poll")
+  (register is-down (Fn [Key] Bool) "key_is_down"))
+

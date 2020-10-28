@@ -1,0 +1,83 @@
+(Project.config "title" "dino")
+(Project.config "output-directory" "out")
+(Project.config "generate-only" true)
+
+(load "lib/tonc.carp")
+
+(deftype Square [x Int y Int w Int color Color])
+
+(defn random-color []
+  (Color.rgb15 (Rand.range 0 31) (Rand.range 0 31) (Rand.range 0 31)))
+
+(defn render [square]
+  (with Square
+    (do
+     (M3.fill Color.black)
+     (M3.rect @(x square)
+              @(y square)
+              (+ @(x square) @(w square))
+              (+ @(y square) @(w square))
+              @(color square)))))
+
+(with Key
+  (with Square
+    (defn is-key-right [square]
+      (if (is-down Right)
+       (set-x square (+ @(x &square) 1))
+       square))
+
+    (defn is-key-down [square]
+      (if (is-down Down)
+       (set-y square (+ @(y &square) 1))
+       square))
+
+    (defn is-key-up [square]
+      (if (is-down Up)
+        (set-y square (- @(y &square) 1))
+        square))
+
+    (defn is-key-left [square]
+      (if (is-down Left)
+        (set-x square (- @(x &square) 1))
+        square))))
+
+(defn update-position [square]
+  (=> square
+    (is-key-right)
+    (is-key-left)
+    (is-key-up)
+    (is-key-down)))
+
+(defn update-color [square]
+  (with Key
+    (with Square
+     (if (is-down A)
+      (set-color square (random-color))
+      square))))
+
+(defn update-size [square]
+  (with Key
+    (with Square
+     (if (is-down L)
+      (set-w square (- @(w &square) 1))
+      (if (is-down R)
+        (set-w square (+ @(w &square) 1))
+        square)))))
+
+(defn update [square]
+  (=> square
+    (update-position)
+    (update-color)
+    (update-size)))
+
+(defn main []
+ (do
+  (Rand.set-seed 42)
+  (Display.set-control (bit-or Display.mode3 Display.background2))
+  (let-do [square (Square.init 0 0 60 (random-color))]
+    (while-do true
+     (Key.poll)
+     (set! square (update square))
+     (Video.vsync)
+     (render &square)))))
+
