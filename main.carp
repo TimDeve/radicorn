@@ -4,80 +4,57 @@
 
 (load "lib/tonc.carp")
 
-(deftype Square [x Int y Int w Int color Color])
+(deftype PlayerState Running Jumping Falling)
+(deftype Player [x Int y Int state PlayerState])
+(defmodule Player
+ (defn new [] (Player.init 20 100 (PlayerState.Running)))
+ (defn height [] 40)
+ (defn width [] 20))
 
-(defn random-color []
-  (Color.rgb15 (Rand.range 0 31) (Rand.range 0 31) (Rand.range 0 31)))
+(deftype World [p Player])
+(defmodule World
+ (defn new [] (World.init (Player.new))))
 
-(defn render [square]
-  (with Square
-    (do
-     (M3.fill Color.black)
-     (M3.rect @(x square)
-              @(y square)
-              (+ @(x square) @(w square))
-              (+ @(y square) @(w square))
-              @(color square)))))
+(defn render [world]
+  (with Player
+    (let-do [player (World.p world)]
+     (M3.fill Color.skyblue)
+     (M3.rect @(x player)
+              @(y player)
+              (+ @(x player) (width))
+              (+ @(y player) (height))
+              Color.cream))))
 
-(with Key
-  (with Square
-    (defn is-key-right [square]
-      (if (is-down Right)
-       (set-x square (+ @(x &square) 1))
-       square))
 
-    (defn is-key-down [square]
-      (if (is-down Down)
-       (set-y square (+ @(y &square) 1))
-       square))
-
-    (defn is-key-up [square]
-      (if (is-down Up)
-        (set-y square (- @(y &square) 1))
-        square))
-
-    (defn is-key-left [square]
-      (if (is-down Left)
-        (set-x square (- @(x &square) 1))
-        square))))
-
-(defn update-position [square]
-  (=> square
-    (is-key-right)
-    (is-key-left)
-    (is-key-up)
-    (is-key-down)))
-
-(defn update-color [square]
+(defn update-player-position [player]
   (with Key
-    (with Square
-     (if (is-down A)
-      (set-color square (random-color))
-      square))))
+    (with Player
+      (match-ref (state &player)
+        PlayerState.Running (if (is-down? A)
+                             (set-state player (PlayerState.Jumping))
+                             player)
+        PlayerState.Jumping (if (>= (y &player) &50)
+                             (update-y player &(fn [y] (- y 2)))
+                             (set-state player (PlayerState.Falling)))
+        PlayerState.Falling (if (>= (y &player) &100)
+                             (set-state player (PlayerState.Running))
+                             (update-y player &(fn [y] (+ y 2))))))))
 
-(defn update-size [square]
-  (with Key
-    (with Square
-     (if (is-down L)
-      (set-w square (- @(w &square) 1))
-      (if (is-down R)
-        (set-w square (+ @(w &square) 1))
-        square)))))
+(defn update-position [world]
+  (World.update-p world &update-player-position))
 
-(defn update [square]
-  (=> square
-    (update-position)
-    (update-color)
-    (update-size)))
+(defn update [world]
+  (=> world
+    (update-position)))
 
 (defn main []
  (do
   (Rand.set-seed 42)
   (Display.set-control (bit-or Display.mode3 Display.background2))
-  (let-do [square (Square.init 0 0 60 (random-color))]
+  (let-do [world (World.new)]
     (while-do true
      (Key.poll)
-     (set! square (update square))
+     (set! world (update world))
      (Video.vsync)
-     (render &square)))))
+     (render &world)))))
 

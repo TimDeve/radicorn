@@ -14,7 +14,14 @@
   (deftemplate copy (Fn [(Ref Color)] Color) "INLINE COLOR $NAME(COLOR *p)" " $DECL { return *p; }")
   (implements copy Color.copy)
   (register rgb15 (Fn [Int Int Int] Color) "RGB15")
-  (register black Color "CLR_BLACK"))
+  (defn random []
+    (rgb15 (Rand.range 0 31) (Rand.range 0 31) (Rand.range 0 31)))
+
+  (register black Color "CLR_BLACK")
+  (register white Color "CLR_WHITE")
+  (register red Color "CLR_RED")
+  (register cream Color "CLR_CREAM")
+  (register skyblue Color "CLR_SKYBLUE"))
 
 (defmodule M3
   (register fill (Fn [Color] ()) "m3_fill")
@@ -43,5 +50,7 @@
   (register Down Key "KEY_DOWN")
 
   (register poll (Fn [] ()) "key_poll")
-  (register is-down (Fn [Key] Bool) "key_is_down"))
+  (register is-down? (Fn [Key] Bool) "key_is_down")
+  (register held? (Fn [Key] Bool) "key_held")
+  (register hit? (Fn [Key] Bool) "key_hit"))
 
