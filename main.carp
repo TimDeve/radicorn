@@ -4,27 +4,49 @@
 
 (load "lib/tonc.carp")
 
+(def floor-y 140)
+
+(deftype Obstacle [x Int])
+(defmodule Obstacle
+ (defn height [] 20)
+ (defn width [] 20))
+
 (deftype PlayerState Running Jumping Falling)
 (deftype Player [x Int y Int state PlayerState])
 (defmodule Player
- (defn new [] (Player.init 20 100 (PlayerState.Running)))
  (defn height [] 40)
- (defn width [] 20))
+ (defn width [] 20)
+ (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running))))
 
-(deftype World [p Player])
+(deftype World [p Player obstacles (Array Obstacle)])
 (defmodule World
- (defn new [] (World.init (Player.new))))
+ (defn new []
+  (World.init (Player.new)
+              [(Obstacle.init Video.screen-width)
+               (Obstacle.init (+ Video.screen-width 140))])))
+
+(defn render-obstacles [obstacles]
+  (foreach [obstacle obstacles]
+   (with Obstacle
+    (M3.rect @(x obstacle)
+             (- @&floor-y (height))
+             (+ @(x obstacle) (width))
+             @&floor-y
+             Color.black))))
+
+(defn render-player [player]
+  (with Player
+   (M3.rect @(x player)
+            @(y player)
+            (+ @(x player) (width))
+            (+ @(y player) (height))
+            Color.cream)))
 
 (defn render [world]
-  (with Player
-    (let-do [player (World.p world)]
-     (M3.fill Color.skyblue)
-     (M3.rect @(x player)
-              @(y player)
-              (+ @(x player) (width))
-              (+ @(y player) (height))
-              Color.cream))))
-
+  (do
+   (M3.fill Color.skyblue)
+   (render-player (World.p world))
+   (render-obstacles (World.obstacles world))))
 
 (defn update-player-position [player]
   (with Key
@@ -40,8 +62,20 @@
                              (set-state player (PlayerState.Running))
                              (update-y player &(fn [y] (+ y 2))))))))
 
+(defn update-obstacle-position [obstacle]
+ (Obstacle.update-x
+  obstacle
+  &(fn [x] (if (<= x 0) Video.screen-width (dec (dec x))))))
+
+(defn update-obstacles-position [obstacles]
+ (Array.endo-map
+  &update-obstacle-position
+  obstacles))
+
 (defn update-position [world]
-  (World.update-p world &update-player-position))
+  (=> world
+    (World.update-p &update-player-position)
+    (World.update-obstacles &update-obstacles-position)))
 
 (defn update [world]
   (=> world
@@ -49,9 +83,8 @@
 
 (defn main []
  (do
-  (Rand.set-seed 42)
   (Display.set-control (bit-or Display.mode3 Display.background2))
-  (let-do [world (World.new)]
+  (let [world (World.new)]
     (while-do true
      (Key.poll)
      (set! world (update world))
