@@ -1,0 +1,6 @@
+(defmodule M3
+  (register fill (Fn [Color] ()) "m3_fill")
+  (register rect (Fn [Int Int Int Int Color] ()) "m3_rect")
+  (register clear (Fn [] ()) "M3_CLEAR")
+  (register plot (Fn [Int Int Color] ()) "m3_plot"))
+

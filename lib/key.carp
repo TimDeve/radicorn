@@ -1,0 +1,16 @@
+(register-type Key "u32")
+(defmodule Key
+  (register A Key "KEY_A")
+  (register B Key "KEY_A")
+  (register L Key "KEY_L")
+  (register R Key "KEY_R")
+  (register Right Key "KEY_RIGHT")
+  (register Left Key "KEY_LEFT")
+  (register Up Key "KEY_UP")
+  (register Down Key "KEY_DOWN")
+
+  (register poll (Fn [] ()) "key_poll")
+  (register is-down? (Fn [Key] Bool) "key_is_down")
+  (register held? (Fn [Key] Bool) "key_held")
+  (register hit? (Fn [Key] Bool) "key_hit"))
+

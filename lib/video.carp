@@ -1,0 +1,5 @@
+(defmodule Video
+  (register vsync (Fn [] ()) "vid_vsync")
+  (register screen-width Int "SCREEN_WIDTH")
+  (register screen-height Int "SCREEN_HEIGHT"))
+

@@ -1,0 +1,21 @@
+(register-type Color "COLOR")
+(defmodule Color
+  (deftemplate copy (Fn [(Ref Color)] Color) "INLINE COLOR $NAME(COLOR *p)" " $DECL { return *p; }")
+  (implements copy Color.copy)
+  (register rgb15 (Fn [Int Int Int] Color) "RGB15")
+  (defn random []
+    (rgb15 (Rand.range 0 31) (Rand.range 0 31) (Rand.range 0 31)))
+
+  (register black Color "CLR_BLACK")
+  (register red Color "CLR_RED")
+  (register lime Color "CLR_LIME")
+  (register yellow Color "CLR_YELLOW")
+  (register blue Color "CLR_BLUE")
+  (register magenta Color "CLR_MAG")
+  (register cyan Color "CLR_CYAN")
+  (register white Color "CLR_WHITE")
+
+  (register dead Color "CLR_DEAD")
+  (register cream Color "CLR_CREAM")
+  (register skyblue Color "CLR_SKYBLUE"))
+

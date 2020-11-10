@@ -1,0 +1,5 @@
+(define-c "int __qran_seed = 0")
+(defmodule Rand
+  (deftemplate set-seed (Fn [Int] ()) "INLINE void $NAME(int v)" "$DECL { __qran_seed = v; }")
+  (register range (Fn [Int Int] Int) "qran_range"))
+
