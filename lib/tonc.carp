@@ -18,10 +18,18 @@
     (rgb15 (Rand.range 0 31) (Rand.range 0 31) (Rand.range 0 31)))
 
   (register black Color "CLR_BLACK")
-  (register white Color "CLR_WHITE")
   (register red Color "CLR_RED")
+  (register lime Color "CLR_LIME")
+  (register yellow Color "CLR_YELLOW")
+  (register blue Color "CLR_BLUE")
+  (register magenta Color "CLR_MAG")
+  (register cyan Color "CLR_CYAN")
+  (register white Color "CLR_WHITE")
+
+  (register dead Color "CLR_DEAD")
   (register cream Color "CLR_CREAM")
   (register skyblue Color "CLR_SKYBLUE"))
+
 
 (defmodule M3
   (register fill (Fn [Color] ()) "m3_fill")

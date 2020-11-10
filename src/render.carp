@@ -1,0 +1,23 @@
+(defn render-obstacles [obstacles]
+  (foreach [obstacle obstacles]
+   (with Obstacle
+    (M3.rect @(x obstacle)
+             (- @&floor-y (height))
+             (+ @(x obstacle) (width))
+             @&floor-y
+             @(color obstacle)))))
+
+(defn render-player [player]
+  (with Player
+   (M3.rect @(x player)
+            @(y player)
+            (+ @(x player) (width))
+            (+ @(y player) (height))
+            Color.cream)))
+
+(sig render (Fn [(Ref World)] ()))
+(defn render [world]
+  (do
+   (M3.fill Color.skyblue)
+   (render-player (World.p world))
+   (render-obstacles (World.obstacles world))))

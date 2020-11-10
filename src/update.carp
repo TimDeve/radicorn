@@ -1,0 +1,51 @@
+(defn update-player-position [player]
+  (with Key
+    (with Player
+      (match-ref (state &player)
+        PlayerState.Running (if (is-down? A)
+                             (set-state player (PlayerState.Jumping))
+                             player)
+        PlayerState.Jumping (if (>= (y &player) &50)
+                             (update-y player &(fn [y] (- y 2)))
+                             (set-state player (PlayerState.Falling)))
+        PlayerState.Falling (if (>= (y &player) &100)
+                             (set-state player (PlayerState.Running))
+                             (update-y player &(fn [y] (+ y 2))))))))
+
+(defn update-player-position [player]
+  (with Key
+    (with Player
+      (match-ref (state &player)
+        PlayerState.Running (if (is-down? A)
+                             (set-state player (PlayerState.Jumping))
+                             player)
+        PlayerState.Jumping (if (>= (y &player) &50)
+                             (update-y player &(fn [y] (- y 2)))
+                             (set-state player (PlayerState.Falling)))
+        PlayerState.Falling (if (>= (y &player) &100)
+                             (set-state player (PlayerState.Running))
+                             (update-y player &(fn [y] (+ y 2))))))))
+
+(defn update-obstacle-position [obstacle]
+ (Obstacle.update-x
+  obstacle
+  &(fn [x] (if (<= x 0) Video.screen-width (dec (dec x))))))
+
+(defn update-obstacles-position [obstacles]
+ (Array.endo-map
+  &update-obstacle-position
+  obstacles))
+
+(defn update-position [world]
+  (=> world
+    (World.update-p &update-player-position)
+    (World.update-obstacles &update-obstacles-position)))
+
+(defn update-state [world]
+  world)
+
+(sig update (Fn [World] World))
+(defn update [world]
+  (=> world
+    (update-position)
+    (update-state)))

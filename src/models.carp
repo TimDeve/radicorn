@@ -1,0 +1,21 @@
+(def floor-y 140)
+
+(deftype Obstacle [x Int color Color])
+(defmodule Obstacle
+ (defn height [] 20)
+ (defn width [] 20))
+
+(deftype PlayerState Running Jumping Falling)
+(deftype Player [x Int y Int state PlayerState])
+(defmodule Player
+ (defn height [] 40)
+ (defn width [] 20)
+ (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running))))
+
+(deftype World [p Player obstacles (Array Obstacle)])
+(defmodule World
+ (defn new []
+  (World.init (Player.new)
+              [(Obstacle.init Video.screen-width Color.dead)
+               (Obstacle.init (+ Video.screen-width 140) Color.magenta)])))
+

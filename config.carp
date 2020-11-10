@@ -1,0 +1,4 @@
+(Project.config "title" "dino")
+(Project.config "output-directory" "out")
+(Project.config "generate-only" true)
+
