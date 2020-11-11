@@ -15,9 +15,31 @@
             (+ @(y player) (height))
             Color.cream)))
 
-(sig render (Fn [(Ref World)] ()))
-(defn render [world]
+(defn render-playing-game [world]
   (do
    (M3.fill Color.skyblue)
-   (render-player (World.p world))
-   (render-obstacles (World.obstacles world))))
+   (render-obstacles (World.obstacles world))
+   (render-player (World.p world))))
+
+(defn render-paused-game [world]
+  (do
+   (render-playing-game world)
+   (M3.rect 40 40 200 120 Color.yellow)))
+
+(defn render-start-screen []
+  (do
+   (M3.fill Color.skyblue)
+   (M3.rect 40 40 200 120 Color.lime)))
+
+(defn render-death-screen []
+  (do
+   (M3.fill Color.skyblue)
+   (M3.rect 40 40 200 120 Color.red)))
+
+(sig render (Fn [(Ref World)] ()))
+(defn render [world]
+  (match-ref (World.state world)
+    WorldState.Playing (render-playing-game world)
+    WorldState.Paused (render-paused-game world)
+    WorldState.Intro (render-start-screen)
+    WorldState.Dead (render-death-screen)))

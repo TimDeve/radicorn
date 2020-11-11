@@ -3,19 +3,25 @@
 (deftype Obstacle [x Int color Color])
 (defmodule Obstacle
  (defn height [] 20)
- (defn width [] 20))
+ (annotate height "inline")
+ (defn width [] 20)
+ (annotate width "inline"))
 
 (deftype PlayerState Running Jumping Falling)
 (deftype Player [x Int y Int state PlayerState])
 (defmodule Player
  (defn height [] 40)
+ (annotate height "inline")
  (defn width [] 20)
+ (annotate width "inline")
  (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running))))
 
-(deftype World [p Player obstacles (Array Obstacle)])
+(deftype WorldState Intro Playing Paused Dead)
+(deftype World [p Player obstacles (Array Obstacle) state WorldState])
 (defmodule World
  (defn new []
   (World.init (Player.new)
               [(Obstacle.init Video.screen-width Color.dead)
-               (Obstacle.init (+ Video.screen-width 140) Color.magenta)])))
+               (Obstacle.init (+ Video.screen-width 140) Color.magenta)]
+              (WorldState.Intro))))
 

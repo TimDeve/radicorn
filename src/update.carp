@@ -31,16 +31,36 @@
    obstacles))
 
 (defn update-position [world]
-  (=> world
-      (World.update-p &update-player-position)
-      (World.update-obstacles &update-obstacles-position)))
+  (match-ref (World.state &world)
+    WorldState.Playing
+    (=> world
+        (World.update-p &update-player-position)
+        (World.update-obstacles &update-obstacles-position))
+
+    _ world))
+
+(defn update-world-state [world]
+  (if (Key.hit? Key.Start)
+      (match-ref (World.state &world)
+         WorldState.Playing (World.set-state world (WorldState.Paused))
+         _                  (World.set-state world (WorldState.Playing)))
+      world))
+
+(defn update-state-if-playing [world]
+  (match-ref (World.state &world)
+     WorldState.Playing
+     (=> world
+         (World.update-p &update-player-state))
+     _ world))
 
 (defn update-state [world]
   (=> world
-      (World.update-p &update-player-state)))
+      (update-world-state)
+      (update-state-if-playing)))
 
 (sig update (Fn [World] World))
 (defn update [world]
   (=> world
     (update-position)
     (update-state)))
+

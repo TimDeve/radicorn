@@ -8,6 +8,8 @@
   (register Left Key "KEY_LEFT")
   (register Up Key "KEY_UP")
   (register Down Key "KEY_DOWN")
+  (register Start Key "KEY_START")
+  (register Select Key "KEY_SELECT")
 
   (register poll (Fn [] ()) "key_poll")
   (register is-down? (Fn [Key] Bool) "key_is_down")
