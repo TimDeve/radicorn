@@ -85,5 +85,19 @@
                 (rect-colliding?
                   &(Rect.init 0 0 10 10)
                   &(Rect.init 11 0 10 20))
-                "rect-colliding? - Shouldn't collide"))
+                "rect-colliding? - Shouldn't collide")
   ; --- rect-colliding?
+
+  ; --- circ-colliding?
+  (assert-true test
+                (circ-colliding?
+                  &(Circle.init 0 0 10)
+                  &(Circle.init 13 0 5))
+                "circ-colliding? - Should collide")
+
+  (assert-false test
+                (circ-colliding?
+                  &(Circle.init 0 0 10)
+                  &(Circle.init 16 0 5))
+                "circ-colliding? - Shouldn't collide"))
+  ; --- circ-colliding?

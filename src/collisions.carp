@@ -1,7 +1,5 @@
 (load "./interfaces.carp")
 
-(use Array)
-
 (sig circ-rect-get-y-distance (Fn [(Ref a) (Ref b)] Int))
 (defn circ-rect-get-y-distance [circ rect]
  (let [circ-y-pos (y-pos circ)
@@ -40,4 +38,11 @@
     (and
      (< (y-pos rect-one) (+ (y-pos rect-two) (rect-height rect-two)))
      (> (+ (y-pos rect-one) (rect-height rect-one)) (y-pos rect-two))))))
+
+(sig circ-colliding? (Fn [(Ref a) (Ref b)] Bool))
+(defn circ-colliding? [circ-one circ-two]
+  (let [dx (- (x-pos circ-one) (x-pos circ-two))
+        dy (- (y-pos circ-one) (y-pos circ-two))
+        distance (Math.sqrt (+ (* dx dx) (* dy dy)))]
+    (< distance (+ (radius circ-one) (radius circ-two)))))
 
