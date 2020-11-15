@@ -30,6 +30,7 @@
 (use Test)
 
 (deftest test
+  ; --- circ-rect-colliding?
   (assert-false test
                 (circ-rect-colliding?
                   &(Circle.init 0 10 5)
@@ -70,4 +71,19 @@
                (circ-rect-colliding?
                  &(Circle.init 97 57 5)
                  &(Rect.init 50 22 10 40))
-               "circ-rect-colliding? - Shouldn't collide - far away"))
+               "circ-rect-colliding? - Shouldn't collide - far away")
+  ; --- circ-rect-colliding?
+
+  ; --- rect-colliding?
+  (assert-true test
+                (rect-colliding?
+                  &(Rect.init 0 0 10 10)
+                  &(Rect.init 9 0 10 20))
+                "rect-colliding? - Should collide")
+
+  (assert-false test
+                (rect-colliding?
+                  &(Rect.init 0 0 10 10)
+                  &(Rect.init 11 0 10 20))
+                "rect-colliding? - Shouldn't collide"))
+  ; --- rect-colliding?

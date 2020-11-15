@@ -31,3 +31,13 @@
         distance (Math.sqrt (+ (* dist-x dist-x) (* dist-y dist-y)))]
    (<= distance (radius circ))))
 
+(sig rect-colliding? (Fn [(Ref a) (Ref b)] Bool))
+(defn rect-colliding? [rect-one rect-two]
+  (and
+   (< (x-pos rect-one) (+ (x-pos rect-two) (rect-width rect-two)))
+   (and
+    (> (+ (x-pos rect-one) (rect-width rect-one)) (x-pos rect-two))
+    (and
+     (< (y-pos rect-one) (+ (y-pos rect-two) (rect-height rect-two)))
+     (> (+ (y-pos rect-one) (rect-height rect-one)) (y-pos rect-two))))))
+
