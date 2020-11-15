@@ -43,14 +43,27 @@
   (if (Key.hit? Key.Start)
       (match-ref (World.state &world)
          WorldState.Playing (World.set-state world (WorldState.Paused))
+         WorldState.Dead    (World.new)
          _                  (World.set-state world (WorldState.Playing)))
       world))
+
+(defn check-for-collisions [world]
+  (let [world* &world]
+   (World.update-state world
+    &(fn [state]
+      (if (Array.any?
+           &(fn [obs] (rect-colliding? (World.p world*)
+                                       obs))
+           (World.obstacles world*))
+        (WorldState.Dead)
+        (WorldState.Playing))))))
 
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
      WorldState.Playing
      (=> world
-         (World.update-p &update-player-state))
+         (World.update-p &update-player-state)
+         (check-for-collisions))
      _ world))
 
 (defn update-state [world]

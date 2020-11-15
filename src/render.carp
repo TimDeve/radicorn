@@ -1,11 +1,12 @@
 (defn render-obstacles [obstacles]
   (foreach [obstacle obstacles]
    (with Obstacle
-    (M3.rect @(x obstacle)
-             (- @&floor-y (height))
-             (+ @(x obstacle) (width))
-             @&floor-y
-             @(color obstacle)))))
+    (when (< @(x obstacle) (- Video.screen-width (width)))
+      (M3.rect @(x obstacle)
+               (- @&floor-y (height))
+               (+ @(x obstacle) (width))
+               @&floor-y
+               @(color obstacle))))))
 
 (defn render-player [player]
   (with Player
