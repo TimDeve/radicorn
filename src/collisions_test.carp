@@ -1,0 +1,73 @@
+(load "Test.carp")
+
+; --- Stubs
+(defmodule Math
+  (defn sqrt [int] (Float.to-int (Float.sqrt (Float.from-int int)))))
+; --- Stubs
+
+(load "./collisions.carp")
+
+(deftype Rect [x Int y Int w Int h Int])
+(defmodule Rect
+ (defn x-pos [rect] @(x rect))
+ (implements x-pos Rect.x-pos)
+ (defn y-pos [rect] @(y rect))
+ (implements y-pos Rect.y-pos)
+ (defn height [rect] @(h rect))
+ (implements rect-height Rect.height)
+ (defn width [rect] @(w rect))
+ (implements rect-width Rect.width))
+
+(deftype Circle [x Int y Int r Int])
+(defmodule Circle
+ (defn x-pos [rect] @(x rect))
+ (implements x-pos Circle.x-pos)
+ (defn y-pos [rect] @(y rect))
+ (implements y-pos Circle.y-pos)
+ (defn radius [rect] @(r rect))
+ (implements radius Circle.radius))
+
+(use Test)
+
+(deftest test
+  (assert-false test
+                (circ-rect-colliding?
+                  &(Circle.init 0 10 5)
+                  &(Rect.init 6 0 10 20))
+                "circ-rect-colliding? - Shouldn't collide - left side")
+
+  (assert-true test
+               (circ-rect-colliding?
+                 &(Circle.init 0 10 5)
+                 &(Rect.init 5 0 10 20))
+               "circ-rect-colliding? - Should collide - right side")
+
+  (assert-false test
+                (circ-rect-colliding?
+                  &(Circle.init 5 26 5)
+                  &(Rect.init 0 0 10 20))
+                "circ-rect-colliding? - Shouldn't collide - bottom side")
+
+  (assert-true test
+               (circ-rect-colliding?
+                 &(Circle.init 5 25 5)
+                 &(Rect.init 0 0 10 20))
+               "circ-rect-colliding? - Should collide - bottom side")
+
+  (assert-false test
+                (circ-rect-colliding?
+                  &(Circle.init 16 5 5)
+                  &(Rect.init 0 0 10 20))
+                "circ-rect-colliding? - Shouldn't collide - right side")
+
+  (assert-true test
+               (circ-rect-colliding?
+                 &(Circle.init 14 5 5)
+                 &(Rect.init 0 0 10 20))
+               "circ-rect-colliding? - Should collide - right side")
+
+  (assert-false test
+               (circ-rect-colliding?
+                 &(Circle.init 97 57 5)
+                 &(Rect.init 50 22 10 40))
+               "circ-rect-colliding? - Shouldn't collide - far away"))

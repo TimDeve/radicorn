@@ -1,14 +1,15 @@
 (system-include "tonc.h")
 
-(load "light-core.carp")
+(load "./light-core.carp")
 
-(load "define-c.carp")
-(load "unsafe-set.carp")
+(load "./define-c.carp")
+(load "./unsafe-set.carp")
 
-(load "rand.carp")
-(load "color.carp")
-(load "mode3.carp")
-(load "display.carp")
-(load "video.carp")
-(load "key.carp")
+(load "./math.carp")
+(load "./rand.carp")
+(load "./color.carp")
+(load "./mode3.carp")
+(load "./display.carp")
+(load "./video.carp")
+(load "./key.carp")
 

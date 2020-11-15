@@ -1,0 +1,2 @@
+(defmodule Math
+  (register sqrt (Fn [Int] Int) "Sqrt"))

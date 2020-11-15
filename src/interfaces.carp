@@ -1,0 +1,7 @@
+(definterface x-pos (Fn [(Ref a)] Int))
+(definterface y-pos (Fn [(Ref a)] Int))
+
+(definterface rect-width (Fn [(Ref a)] Int))
+(definterface rect-height (Fn [(Ref a)] Int))
+
+(definterface radius (Fn [(Ref a)] Int))

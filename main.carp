@@ -2,7 +2,9 @@
 
 (load "lib/tonc.carp")
 
+(load "src/interfaces.carp")
 (load "src/models.carp")
+(load "src/collisions.carp")
 (load "src/update.carp")
 (load "src/render.carp")
 
