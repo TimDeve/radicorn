@@ -1,6 +1,6 @@
 (defmodule Display
-  (register control (Ptr Int) "&REG_DISPCNT")
-  (defn set-control [val] (unsafe-set control val))
+  (register control-ptr (Ptr Int) "&REG_DISPCNT")
+  (defn control [val] (unsafe-set control-ptr val))
   (register mode3 Uint16 "DCNT_MODE3")
   (register background2 Uint16 "DCNT_BG2"))
 

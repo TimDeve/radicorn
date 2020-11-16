@@ -10,7 +10,7 @@
 
 (defn main []
  (do
-  (Display.set-control (bit-or Display.mode3 Display.background2))
+  (Display.control (bit-or Display.mode3 Display.background2))
   (let [world (World.new)]
     (while-do true
      (Key.poll)

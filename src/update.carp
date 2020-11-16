@@ -13,10 +13,10 @@
         PlayerState.Running (if (is-down? A)
                              (set-state player (PlayerState.Jumping))
                              player)
-        PlayerState.Jumping (if (>= (y &player) &50)
-                             player
-                             (set-state player (PlayerState.Falling)))
-        PlayerState.Falling (if (>= (y &player) &100)
+        PlayerState.Jumping (if (<= (y &player) &(* 2 (height)))
+                             (set-state player (PlayerState.Falling))
+                             player)
+        PlayerState.Falling (if (>= (y &player) &(- floor-y (height)))
                              (set-state player (PlayerState.Running))
                              player)))))
 

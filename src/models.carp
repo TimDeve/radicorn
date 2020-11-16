@@ -2,9 +2,9 @@
 
 (deftype Obstacle [x Int color Color])
 (defmodule Obstacle
- (defn height [] 20)
+ (defn height [] 16)
  (annotate height "inline")
- (defn width [] 20)
+ (defn width [] 16)
  (annotate width "inline")
  (defn y [] 120)
  (annotate y "inline")
@@ -24,9 +24,9 @@
 (deftype PlayerState Running Jumping Falling)
 (deftype Player [x Int y Int state PlayerState])
 (defmodule Player
- (defn height [] 40)
+ (defn height [] 32)
  (annotate height "inline")
- (defn width [] 20)
+ (defn width [] 16)
  (annotate width "inline")
  (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running)))
 
