@@ -20,7 +20,7 @@
  (do
   (Display.control (bit-or Display.object Display.object-1d))
   (memcpy (Object.ovram 0) sprt-tiles sprt-tiles-len)
-  (memcpy Object.pal-mem sprt-tiles sprt-tiles-len)
+  (memcpy Object.pal-mem sprt-pal sprt-pal-len)
   (Object.oam-init)
   (let [world (World.new)]
     (while-do true
