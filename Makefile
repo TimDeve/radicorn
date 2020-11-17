@@ -113,21 +113,27 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 .PHONY: $(BUILD) clean
 .DEFAULT_GOAL := $(BUILD)
 
-built-assets/sprt:
+built-assets/sprt.h: assets/sprt.png
+	@echo --- Assets
 	@mkdir -p built-assets
 	@grit assets/sprt.png -pn2 -gB4 -gTFFFFFF -o ./built-assets/sprt
 
+out/main.c: $(wildcard **/*.carp) main.carp
+	@echo --- Carp Compilation
+	@carp --no-core -b main.carp
+
 #---------------------------------------------------------------------------------
 
-$(BUILD):
-	@carp --no-core -b main.carp
+$(BUILD): built-assets/sprt.h out/main.c
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
 clean:
-	@echo clean ...
+	@echo --- Clean
 	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).gba
+	@rm -rf out
+	@rm -rf built-assets
 
 
 #---------------------------------------------------------------------------------
