@@ -1,0 +1,63 @@
+(inline-c obj-buffer "
+OBJ_ATTR obj_buffer[128];
+OBJ_AFFINE *obj_aff_buffer = (OBJ_AFFINE*)obj_buffer;
+int obj_buffer_length = 0;
+int obj_buffer_max_length = 0
+")
+
+(register-type Object "OBJ_ATTR")
+(defmodule Object
+  (deftemplate init (Fn [Uint16 Uint16 Uint16] Object)
+                    "inline static OBJ_ATTR $NAME(u16 attr1, u16 attr2, u16 attr3)"
+                    "$DECL {
+                      OBJ_ATTR obj;
+                      obj_set_attr(&obj, attr1, attr2, attr3);
+                      return obj;
+                    }")
+  (deftemplate init-bare (Fn [] Object)
+                    "inline OBJ_ATTR $NAME()"
+                    "$DECL {
+                      OBJ_ATTR obj;
+                      return obj;
+                    }")
+  (register oam-clear (Fn [] ()) "OAM_CLEAR")
+  (register oam-copy (Fn [(Ptr Object) (Ptr Object) Int] ()) "oam_copy")
+  (deftemplate oam-init (Fn [] ())
+                     "inline void* $NAME()"
+                     "$DECL {
+                       oam_init(obj_buffer, 128);
+                     }")
+  (register set-attr! (Fn [(Ref Object) Uint16 Uint16 Uint16] ()) "obj_set_attr")
+  (defn set-attr [obj attr1 attr2 attr3] (do (set-attr! &obj attr1 attr2 attr3) obj))
+  (register set-pos! (Fn [(Ref Object) Int Int] ()) "obj_set_pos")
+  (defn set-pos [obj x y] (do (set-pos! &obj x y) obj))
+  (register attr0-square Uint16 "ATTR0_SQUARE")
+  (register attr1-size-64 Uint16 "ATTR1_SIZE_64")
+  (register attr1-size-16 Uint16 "ATTR1_SIZE_16")
+  (register attr2-palbank (Fn [Int] Int) "ATTR2_PALBANK")
+  (register attr2-build (Fn [Int Int Int] Uint16) "ATTR2_BUILD")
+  (deftemplate buffer-push (Fn [Object] ())
+                           "void $NAME(OBJ_ATTR obj)"
+                           "$DECL {
+                              obj_buffer[obj_buffer_length] = obj;
+                              obj_buffer_length++;
+                              if (obj_buffer_length > obj_buffer_max_length) {
+                                obj_buffer_max_length = obj_buffer_length;
+                              }
+                           }")
+  (deftemplate buffer-blit (Fn [] ())
+                           "void $NAME()"
+                           "$DECL {
+                              obj_hide_multi(oam_mem, obj_buffer_max_length);
+                              oam_copy(oam_mem, obj_buffer, obj_buffer_length);
+                              obj_hide_multi(obj_buffer, obj_buffer_length);
+                              obj_buffer_length = 0;
+                           }")
+  (deftemplate ovram (Fn [Int] (Ptr ()))
+                     "inline void* $NAME(int tile_index)"
+                     "$DECL {
+                       return &tile_mem[4][tile_index];
+                     }")
+
+  (register pal-mem (Ptr ()) "pal_obj_mem"))
+

@@ -2,9 +2,9 @@
 
 (load "./light-core.carp")
 
-(load "./define-c.carp")
-(load "./unsafe-set.carp")
+(load "./utils.carp")
 
+(load "./object.carp")
 (load "./math.carp")
 (load "./rand.carp")
 (load "./color.carp")

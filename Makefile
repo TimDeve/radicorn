@@ -22,7 +22,7 @@ include $(DEVKITARM)/gba_rules
 #---------------------------------------------------------------------------------
 TARGET		:= $(notdir $(CURDIR))
 BUILD		:= build
-SOURCES		:= out
+SOURCES		:= out built-assets
 INCLUDES	:= include
 DATA		:=
 MUSIC		:=
@@ -111,8 +111,14 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 .PHONY: $(BUILD) clean
+.DEFAULT_GOAL := $(BUILD)
+
+built-assets/sprt:
+	@mkdir -p built-assets
+	@grit assets/sprt.png -pn2 -gB4 -gTFFFFFF -o ./built-assets/sprt
 
 #---------------------------------------------------------------------------------
+
 $(BUILD):
 	@carp --no-core -b main.carp
 	@[ -d $@ ] || mkdir -p $@

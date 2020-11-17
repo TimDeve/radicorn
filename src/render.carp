@@ -1,46 +1,45 @@
+(use Object)
+(defn make-box []
+  (init attr0-square
+        attr1-size-16
+        (attr2-build 0 0 0)))
+
 (defn render-obstacles [obstacles]
   (foreach [obstacle obstacles]
    (with Obstacle
     (when (< @(x obstacle) (- Video.screen-width (width)))
-      (M3.rect @(x obstacle)
-               (- @&floor-y (height))
-               (+ @(x obstacle) (width))
-               @&floor-y
-               @(color obstacle))))))
+      (buffer-push (set-pos (make-box) @(x obstacle) (- @&floor-y (height))))))))
 
 (defn render-player [player]
   (with Player
-   (M3.rect @(x player)
-            @(y player)
-            (+ @(x player) (width))
-            (+ @(y player) (height))
-            Color.cream)))
+   (do
+    (buffer-push (set-pos (make-box) @(x player) @(y player)))
+    (buffer-push (set-pos (make-box) @(x player) (+ 16 @(y player)))))))
 
 (defn render-playing-game [world]
   (do
-   (M3.fill Color.skyblue)
    (render-obstacles (World.obstacles world))
    (render-player (World.p world))))
 
 (defn render-paused-game [world]
   (do
    (render-playing-game world)
-   (M3.rect 40 40 200 120 Color.yellow)))
+   (buffer-push (set-pos (make-box) 114 0))))
 
 (defn render-start-screen []
-  (do
-   (M3.fill Color.skyblue)
-   (M3.rect 40 40 200 120 Color.lime)))
+  (do 
+   (buffer-push (set-pos (make-box) 0 0))))
 
 (defn render-death-screen []
   (do
-   (M3.fill Color.skyblue)
-   (M3.rect 40 40 200 120 Color.red)))
+   (buffer-push (set-pos (make-box) 224 0))))
 
 (sig render (Fn [(Ref World)] ()))
 (defn render [world]
-  (match-ref (World.state world)
-    WorldState.Playing (render-playing-game world)
-    WorldState.Paused (render-paused-game world)
-    WorldState.Intro (render-start-screen)
-    WorldState.Dead (render-death-screen)))
+  (do
+    (match-ref (World.state world)
+      WorldState.Playing (render-playing-game world)
+      WorldState.Paused (render-paused-game world)
+      WorldState.Intro (render-start-screen)
+      WorldState.Dead (render-death-screen))
+    (Object.buffer-blit)))

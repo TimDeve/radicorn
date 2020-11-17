@@ -1,6 +1,10 @@
+(use ToncUtils)
+
 (defmodule Display
   (register control-ptr (Ptr Int) "&REG_DISPCNT")
   (defn control [val] (unsafe-set control-ptr val))
   (register mode3 Uint16 "DCNT_MODE3")
-  (register background2 Uint16 "DCNT_BG2"))
+  (register background2 Uint16 "DCNT_BG2")
+  (register object Uint16 "DCNT_OBJ")
+  (register object-1d Uint16 "DCNT_OBJ_1D"))
 

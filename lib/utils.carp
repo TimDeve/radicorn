@@ -1,0 +1,8 @@
+(defmodule ToncUtils
+  (defmacro define-c [cdecl]
+    (eval (list 'inline-c (gensym-with 'define-c-) cdecl)))
+
+  (deftemplate unsafe-set (Fn [(Ptr p) v] ()) "INLINE void $NAME(volatile $p *p, $v v)" "$DECL { *p = ($p)v; }")
+
+  (register memcpy (Fn [(Ptr ()) (Ptr ()) Int] ()) "memcpy"))
+

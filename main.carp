@@ -8,13 +8,23 @@
 (load "src/update.carp")
 (load "src/render.carp")
 
+(use ToncUtils)
+
+(relative-include "./built-assets/sprt.h")
+(register sprt-tiles (Ptr ()) "sprtTiles")
+(register sprt-tiles-len Int "sprtTilesLen")
+(register sprt-pal (Ptr ()) "sprtPal")
+(register sprt-pal-len Int "sprtPalLen")
+
 (defn main []
  (do
-  (Display.control (bit-or Display.mode3 Display.background2))
+  (Display.control (bit-or Display.object Display.object-1d))
+  (memcpy (Object.ovram 0) sprt-tiles sprt-tiles-len)
+  (memcpy Object.pal-mem sprt-tiles sprt-tiles-len)
+  (Object.oam-init)
   (let [world (World.new)]
     (while-do true
      (Key.poll)
      (set! world (update world))
      (Video.vsync)
      (render &world)))))
-
