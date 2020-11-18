@@ -110,7 +110,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: $(BUILD) clean
+.PHONY: $(BUILD) clean test
 .DEFAULT_GOAL := $(BUILD)
 
 built-assets/pal.h: assets/pal.png
@@ -128,7 +128,7 @@ built-assets/unicorn.h: assets/unicorn.png
 built-assets: built-assets/box.h built-assets/unicorn.h built-assets/pal.h
 	@echo --- Assets
 
-out/main.c: $(wildcard **/*.carp) main.carp
+out/main.c: $(wildcard **/*.carp) $(wildcard *.carp)
 	@echo --- Carp Compilation
 	@carp --no-core -b main.carp
 
@@ -145,6 +145,11 @@ clean:
 	@rm -rf out
 	@rm -rf built-assets
 
+test:
+	@./tests.sh
+
+run: $(BUILD)
+	@hash xdg-open 2>/dev/null && xdg-open $(TARGET).gba || open $(TARGET).gba
 
 #---------------------------------------------------------------------------------
 else
@@ -185,7 +190,4 @@ soundbank.bin soundbank.h : $(AUDIOFILES)
 endif
 #---------------------------------------------------------------------------------------
 
-.PHONY: test
-test:
-	@./tests.sh
 
