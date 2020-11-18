@@ -1,8 +1,16 @@
 (use Object)
+
+(use Assets)
+
 (defn make-box []
   (init attr0-square
         attr1-size-16
-        (attr2-build 0 0 0)))
+        (attr2-build (box-id) (pal-id) 0)))
+
+(defn make-unicorn []
+  (init attr0-tall
+        attr1-size-16-32
+        (attr2-build (unicorn-id) (pal-id) 0)))
 
 (defn render-obstacles [obstacles]
   (foreach [obstacle obstacles]
@@ -13,8 +21,7 @@
 (defn render-player [player]
   (with Player
    (do
-    (buffer-push (set-pos (make-box) @(x player) @(y player)))
-    (buffer-push (set-pos (make-box) @(x player) (+ 16 @(y player)))))))
+    (buffer-push (set-pos (make-unicorn) @(x player) @(y player))))))
 
 (defn render-playing-game [world]
   (do

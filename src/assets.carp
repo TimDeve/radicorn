@@ -1,0 +1,26 @@
+(use ToncUtils)
+
+(defmodule Assets
+  (relative-include "../built-assets/pal.h")
+  (register pal (Ptr ()) "palPal")
+  (register pal-len Int "palPalLen")
+
+  (relative-include "../built-assets/box.h")
+  (register box-tiles (Ptr ()) "boxTiles")
+  (register box-tiles-len Int "boxTilesLen")
+
+  (relative-include "../built-assets/unicorn.h")
+  (register unicorn-tiles (Ptr ()) "unicornTiles")
+  (register unicorn-tiles-len Int "unicornTilesLen")
+
+  (defn box-id [] 0)
+  (annotate box-id "inline")
+  (defn unicorn-id [] 4)
+  (annotate unicorn-id "inline")
+  (defn pal-id [] 0)
+  (annotate pal-id "inline")
+
+  (defn-do init []
+    (memcpy (Object.ovram (box-id)) box-tiles box-tiles-len)
+    (memcpy (Object.ovram (unicorn-id)) unicorn-tiles unicorn-tiles-len)
+    (memcpy Object.pal-mem pal pal-len)))
