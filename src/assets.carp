@@ -15,7 +15,7 @@
 
   (defn box-id [] 0)
   (annotate box-id "inline")
-  (defn unicorn-id [] 4)
+  (defn unicorn-id [] 9)
   (annotate unicorn-id "inline")
   (defn pal-id [] 0)
   (annotate pal-id "inline")

@@ -115,15 +115,15 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 built-assets/pal.h: assets/pal.png
 	@mkdir -p built-assets
-	@grit assets/pal.png -pn32 -gB4 -o ./built-assets/pal
+	@grit assets/pal.png -pn32 -g! -o ./built-assets/pal
 
 built-assets/box.h: assets/box.png
 	@mkdir -p built-assets
-	@grit assets/box.png -p! -gB4 -o ./built-assets/box
+	@grit assets/box.png -p! -gB8 -o ./built-assets/box
 
 built-assets/unicorn.h: assets/unicorn.png
 	@mkdir -p built-assets
-	@grit assets/unicorn.png -p! -gB4 -o ./built-assets/unicorn
+	@grit assets/unicorn.png -p! -gB8 -o ./built-assets/unicorn
 
 built-assets: built-assets/box.h built-assets/unicorn.h built-assets/pal.h
 	@echo --- Assets

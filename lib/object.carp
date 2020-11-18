@@ -33,6 +33,7 @@ int obj_buffer_max_length = 0
   (defn set-pos [obj x y] (do (set-pos! &obj x y) obj))
   (register attr0-square Uint16 "ATTR0_SQUARE")
   (register attr0-tall Uint16 "ATTR0_TALL")
+  (register attr0-8bpp Uint16 "ATTR0_8BPP")
   (register attr1-size-64 Uint16 "ATTR1_SIZE_64")
   (register attr1-size-16 Uint16 "ATTR1_SIZE_16")
   (register attr1-size-16-32 Uint16 "ATTR1_SIZE_16x32")

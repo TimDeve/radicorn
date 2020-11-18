@@ -3,12 +3,12 @@
 (use Assets)
 
 (defn make-box []
-  (init attr0-square
+  (init (bit-or attr0-square attr0-8bpp)
         attr1-size-16
         (attr2-build (box-id) (pal-id) 0)))
 
 (defn make-unicorn []
-  (init attr0-tall
+  (init (bit-or attr0-tall attr0-8bpp)
         attr1-size-16-32
         (attr2-build (unicorn-id) (pal-id) 0)))
 
