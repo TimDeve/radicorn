@@ -1,4 +1,4 @@
-(Project.config "title" "dino")
+(Project.config "title" "Radicorn")
 (Project.config "output-directory" "out")
 (Project.config "generate-only" true)
 
