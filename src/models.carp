@@ -1,4 +1,4 @@
-(def floor-y 118)
+(def floor-y 120)
 
 (deftype Obstacle [x Int color Color])
 (defmodule Obstacle

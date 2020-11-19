@@ -1,13 +1,17 @@
 (use ToncUtils)
 
 (defmodule Assets
-  (relative-include "../built-assets/backg.h")
-  (register backg-tiles (Ptr ()) "backgTiles")
-  (register backg-tiles-len Int "backgTilesLen")
-  (register backg-map (Ptr ()) "backgMap")
-  (register backg-map-len Int "backgMapLen")
-  (register backg-pal (Ptr ()) "backgPal")
-  (register backg-pal-len Int "backgPalLen")
+  (relative-include "../built-assets/backtop.h")
+  (register backtop-tiles (Ptr ()) "backtopTiles")
+  (register backtop-tiles-len Int "backtopTilesLen")
+  (register backtop-map (Ptr ()) "backtopMap")
+  (register backtop-map-len Int "backtopMapLen")
+
+  (relative-include "../built-assets/backbottom.h")
+  (register backbottom-tiles (Ptr ()) "backbottomTiles")
+  (register backbottom-tiles-len Int "backbottomTilesLen")
+  (register backbottom-map (Ptr ()) "backbottomMap")
+  (register backbottom-map-len Int "backbottomMapLen")
 
   (relative-include "../built-assets/pal.h")
   (register pal (Ptr ()) "palPal")
@@ -33,7 +37,9 @@
     (memcpy (Object.ovram (unicorn-id)) unicorn-tiles unicorn-tiles-len)
     (memcpy Object.pal-mem pal pal-len)
 
-    (memcpy (Background.cbb-mem 0) backg-tiles backg-tiles-len)
-    (memcpy (Background.sbb-mem 0) backg-map backg-map-len)
-    (memcpy Background.pal-mem backg-pal backg-pal-len)))
+    (memcpy (Background.cbb-mem 0) backtop-tiles backtop-tiles-len)
+    (memcpy (Background.sbb-mem 30) backtop-map backtop-map-len)
+    (memcpy (Background.cbb-mem 1) backbottom-tiles backbottom-tiles-len)
+    (memcpy (Background.sbb-mem 31) backbottom-map backbottom-map-len)
+    (memcpy Background.pal-mem pal pal-len)))
 

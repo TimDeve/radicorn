@@ -6,6 +6,7 @@
   (register mode0 Uint16 "DCNT_MODE0")
   (register mode3 Uint16 "DCNT_MODE3")
   (register background0 Uint16 "DCNT_BG0")
+  (register background1 Uint16 "DCNT_BG1")
   (register background2 Uint16 "DCNT_BG2")
   (register object Uint16 "DCNT_OBJ")
   (register object-1d Uint16 "DCNT_OBJ_1D"))

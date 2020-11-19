@@ -113,9 +113,13 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 .PHONY: $(BUILD) clean test
 .DEFAULT_GOAL := $(BUILD)
 
-built-assets/backg.h: assets/backg.png
+built-assets/backbottom.h: assets/backbottom.png
 	@mkdir -p built-assets
-	@grit assets/backg.png -gB8 -mRtpf -o ./built-assets/backg
+	@grit assets/backbottom.png -p! -gB8 -mRtpf -o ./built-assets/backbottom
+
+built-assets/backtop.h: assets/backtop.png
+	@mkdir -p built-assets
+	@grit assets/backtop.png -p! -gB8 -mRtpf -o ./built-assets/backtop
 
 built-assets/pal.h: assets/pal.png
 	@mkdir -p built-assets
@@ -129,7 +133,7 @@ built-assets/unicorn.h: assets/unicorn.png
 	@mkdir -p built-assets
 	@grit assets/unicorn.png -p! -gB8 -o ./built-assets/unicorn
 
-built-assets: built-assets/box.h built-assets/unicorn.h built-assets/pal.h built-assets/backg.h
+built-assets: built-assets/box.h built-assets/unicorn.h built-assets/pal.h built-assets/backtop.h built-assets/backbottom.h
 	@echo --- Assets
 
 out/main.c: $(wildcard **/*.carp) $(wildcard *.carp)

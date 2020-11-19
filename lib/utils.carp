@@ -1,3 +1,6 @@
+(defmacro bit-or* [:rest forms]
+  (build-vararg 'bit-or forms))
+
 (defmodule ToncUtils
   (defmacro define-c [cdecl]
     (eval (list 'inline-c (gensym-with 'define-c-) cdecl)))

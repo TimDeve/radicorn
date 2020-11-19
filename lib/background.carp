@@ -2,29 +2,54 @@
 
 (deftype Background
   Zero
-  One
-  Two
-  Three)
+  One)
 
 (defmodule Background
   (register zero-x-control-ptr (Ptr Uint16) "&REG_BG0HOFS")
   (register zero-y-control-ptr (Ptr Uint16) "&REG_BG0VOFS")
+  (register one-x-control-ptr (Ptr Uint16) "&REG_BG1HOFS")
+  (register one-y-control-ptr (Ptr Uint16) "&REG_BG1VOFS")
 
   (defn control-offset [bg x y]
     (match bg
       Zero (do
             (unsafe-set zero-x-control-ptr x)
             (unsafe-set zero-y-control-ptr y))
+      One  (do
+            (unsafe-set one-x-control-ptr x)
+            (unsafe-set one-y-control-ptr y))
       _    (do
             (unsafe-set zero-x-control-ptr x)
             (unsafe-set zero-y-control-ptr y))))
 
+  (defn control-y-offset [bg x]
+    (match bg
+      Zero (do
+            (unsafe-set zero-y-control-ptr x))
+      One  (do
+            (unsafe-set one-y-control-ptr x))
+      _    (do
+            (unsafe-set zero-y-control-ptr x))))
+
+  (defn control-x-offset [bg x]
+    (match bg
+      Zero (do
+            (unsafe-set zero-x-control-ptr x))
+      One  (do
+            (unsafe-set one-x-control-ptr x))
+      _    (do
+            (unsafe-set zero-x-control-ptr x))))
+
   (register zero-control-ptr (Ptr Uint16) "&REG_BG0CNT")
+  (register one-control-ptr (Ptr Uint16) "&REG_BG1CNT")
   (defn control [bg val]
     (match bg
-     Zero (unsafe-set zero-control-ptr (the Uint16 val))
-     _    (unsafe-set zero-control-ptr (the Uint16 val))))
+     Zero (unsafe-set zero-control-ptr val)
+     One  (unsafe-set one-control-ptr val)
+     _    (unsafe-set zero-control-ptr val)))
 
+
+  (register priority (Fn [Int] Uint16) "BG_PRIO")
   (register cbb (Fn [Int] Uint16) "BG_CBB")
   (register sbb (Fn [Int] Uint16) "BG_SBB")
   (register bg-4bpp Uint16 "BG_4BPP")
@@ -33,15 +58,15 @@
   (register bg-64-32 Uint16 "BG_REG_64x32")
 
   (deftemplate cbb-mem (Fn [Int] (Ptr ()))
-                       "inline void* $NAME(int tile_index)"
+                       "inline void* $NAME(int background_id)"
                        "$DECL {
-                         return &tile_mem[0][tile_index];
+                         return &tile_mem[background_id][0];
                        }")
 
   (deftemplate sbb-mem (Fn [Int] (Ptr ()))
                        "inline void* $NAME(int map_index)"
                        "$DECL {
-                         return &se_mem[30][map_index];
+                         return &se_mem[map_index][0];
                        }")
 
   (register pal-mem (Ptr ()) "pal_bg_mem"))
