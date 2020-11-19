@@ -23,8 +23,13 @@
    (do
     (buffer-push (set-pos (make-unicorn) @(x player) @(y player))))))
 
+(defn-do render-background [world]
+  (Background.control-x-offset (Background.Zero) @(World.back-zero-x world))
+  (Background.control-x-offset (Background.One) @(World.back-one-x world)))
+
 (defn render-playing-game [world]
   (do
+   (render-background world)
    (render-obstacles (World.obstacles world))
    (render-player (World.p world))))
 

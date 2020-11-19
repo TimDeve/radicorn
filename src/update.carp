@@ -58,11 +58,16 @@
         (WorldState.Dead)
         (WorldState.Playing))))))
 
+(defn update-back-zero [x] (inc x))
+(defn update-back-one [x] (inc (inc x)))
+
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
      WorldState.Playing
      (=> world
          (World.update-p &update-player-state)
+         (World.update-back-zero-x &update-back-zero)
+         (World.update-back-one-x &update-back-one)
          (check-for-collisions))
      _ world))
 
