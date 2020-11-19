@@ -11,8 +11,13 @@
 
 (defn main []
  (do
-  (Display.control (bit-or Display.object Display.object-1d))
   (Assets.init)
+  (with Display
+    (control (bit-or mode0 (bit-or background0 (bit-or object object-1d)))))
+  (with Background
+   (do
+    (control (Zero) (bit-or (cbb 0) (bit-or (sbb 30) (bit-or bg-8bpp bg-32-32))))
+    (control-offset (Zero) 0 10)))
   (Object.oam-init)
   (let [world (World.new)]
     (while-do true

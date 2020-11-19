@@ -5,6 +5,7 @@
 (load "./utils.carp")
 
 (load "./object.carp")
+(load "./background.carp")
 (load "./math.carp")
 (load "./rand.carp")
 (load "./color.carp")

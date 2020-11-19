@@ -1,3 +1,0 @@
-(defmacro define-c [cdecl]
-  (eval (list 'inline-c (gensym-with 'define-c-) cdecl)))
-

@@ -1,6 +1,14 @@
 (use ToncUtils)
 
 (defmodule Assets
+  (relative-include "../built-assets/backg.h")
+  (register backg-tiles (Ptr ()) "backgTiles")
+  (register backg-tiles-len Int "backgTilesLen")
+  (register backg-map (Ptr ()) "backgMap")
+  (register backg-map-len Int "backgMapLen")
+  (register backg-pal (Ptr ()) "backgPal")
+  (register backg-pal-len Int "backgPalLen")
+
   (relative-include "../built-assets/pal.h")
   (register pal (Ptr ()) "palPal")
   (register pal-len Int "palPalLen")
@@ -23,4 +31,9 @@
   (defn-do init []
     (memcpy (Object.ovram (box-id)) box-tiles box-tiles-len)
     (memcpy (Object.ovram (unicorn-id)) unicorn-tiles unicorn-tiles-len)
-    (memcpy Object.pal-mem pal pal-len)))
+    (memcpy Object.pal-mem pal pal-len)
+
+    (memcpy (Background.cbb-mem 0) backg-tiles backg-tiles-len)
+    (memcpy (Background.sbb-mem 0) backg-map backg-map-len)
+    (memcpy Background.pal-mem backg-pal backg-pal-len)))
+

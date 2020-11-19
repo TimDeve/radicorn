@@ -1,0 +1,48 @@
+(use ToncUtils)
+
+(deftype Background
+  Zero
+  One
+  Two
+  Three)
+
+(defmodule Background
+  (register zero-x-control-ptr (Ptr Uint16) "&REG_BG0HOFS")
+  (register zero-y-control-ptr (Ptr Uint16) "&REG_BG0VOFS")
+
+  (defn control-offset [bg x y]
+    (match bg
+      Zero (do
+            (unsafe-set zero-x-control-ptr x)
+            (unsafe-set zero-y-control-ptr y))
+      _    (do
+            (unsafe-set zero-x-control-ptr x)
+            (unsafe-set zero-y-control-ptr y))))
+
+  (register zero-control-ptr (Ptr Uint16) "&REG_BG0CNT")
+  (defn control [bg val]
+    (match bg
+     Zero (unsafe-set zero-control-ptr (the Uint16 val))
+     _    (unsafe-set zero-control-ptr (the Uint16 val))))
+
+  (register cbb (Fn [Int] Uint16) "BG_CBB")
+  (register sbb (Fn [Int] Uint16) "BG_SBB")
+  (register bg-4bpp Uint16 "BG_4BPP")
+  (register bg-8bpp Uint16 "BG_8BPP")
+  (register bg-32-32 Uint16 "BG_REG_32x32")
+  (register bg-64-32 Uint16 "BG_REG_64x32")
+
+  (deftemplate cbb-mem (Fn [Int] (Ptr ()))
+                       "inline void* $NAME(int tile_index)"
+                       "$DECL {
+                         return &tile_mem[0][tile_index];
+                       }")
+
+  (deftemplate sbb-mem (Fn [Int] (Ptr ()))
+                       "inline void* $NAME(int map_index)"
+                       "$DECL {
+                         return &se_mem[30][map_index];
+                       }")
+
+  (register pal-mem (Ptr ()) "pal_bg_mem"))
+

@@ -1,2 +1,0 @@
-(deftemplate unsafe-set (Fn [(Ptr p) v] ()) "INLINE void $NAME(volatile $p *p, $v v)" "$DECL { *p = ($p)v; }")
-
