@@ -1,4 +1,4 @@
-(def floor-y 140)
+(def floor-y 118)
 
 (deftype Obstacle [x Int color Color])
 (defmodule Obstacle
@@ -6,7 +6,7 @@
  (annotate height "inline")
  (defn width [] 16)
  (annotate width "inline")
- (defn y [] 120)
+ (defn y [] (- floor-y (height)))
  (annotate y "inline")
 
  (defn hitbox-x-pos [obs] @(x obs))

@@ -16,7 +16,7 @@
   (foreach [obstacle obstacles]
    (with Obstacle
     (when (< @(x obstacle) (- Video.screen-width (width)))
-      (buffer-push (set-pos (make-box) @(x obstacle) (- @&floor-y (height))))))))
+      (buffer-push (set-pos (make-box) @(x obstacle) (y)))))))
 
 (defn render-player [player]
   (with Player
