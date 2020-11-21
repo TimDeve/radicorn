@@ -20,7 +20,7 @@
     (control (One) (bit-or* (cbb 1) (sbb 31) bg-8bpp bg-32-32 (priority 0)))))
   (Object.oam-init)
   (let [world (World.new)]
-    (while-do true
+    (forever-do
      (Key.poll)
      (set! world (update world))
      (Video.vsync)
