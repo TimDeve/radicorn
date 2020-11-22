@@ -1,0 +1,4 @@
+(defmodule Interrupt
+ (deftemplate init (Fn [] ()) "void $NAME()" "$DECL { irq_init(NULL); }")
+ (deftemplate enable-vblank (Fn [] ()) "void $NAME()" "$DECL { irq_add(II_VBLANK, NULL); }")
+ (register vsync (Fn [] ()) "VBlankIntrWait"))

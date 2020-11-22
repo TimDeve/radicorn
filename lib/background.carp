@@ -3,7 +3,8 @@
 (deftype Background
   Zero
   One
-  Two)
+  Two
+  Three)
 
 (defmodule Background
   (register zero-x-control-ptr (Ptr Uint16) "&REG_BG0HOFS")
@@ -23,7 +24,9 @@
             (unsafe-set one-y-control-ptr y))
       Two  (do
             (unsafe-set two-x-control-ptr x)
-            (unsafe-set two-y-control-ptr y))))
+            (unsafe-set two-y-control-ptr y))
+      _    (Debug.halt "Unhandled match case")))
+
 
   (defn control-y-offset [bg y]
     (match bg
@@ -35,7 +38,8 @@
     (match bg
       Zero (unsafe-set zero-x-control-ptr x)
       One  (unsafe-set one-x-control-ptr x)
-      Two  (unsafe-set two-x-control-ptr x)))
+      Two  (unsafe-set two-x-control-ptr x)
+      _    (Debug.halt "Unhandled match case")))
 
   (register zero-control-ptr (Ptr Uint16) "&REG_BG0CNT")
   (register one-control-ptr (Ptr Uint16) "&REG_BG1CNT")
@@ -44,8 +48,8 @@
     (match bg
      Zero (unsafe-set zero-control-ptr val)
      One  (unsafe-set one-control-ptr val)
-     Two  (unsafe-set two-control-ptr val)))
-
+     Two  (unsafe-set two-control-ptr val)
+     _    (Debug.halt "Unhandled match case")))
 
   (register priority (Fn [Int] Uint16) "BG_PRIO")
   (register cbb (Fn [Int] Uint16) "BG_CBB")

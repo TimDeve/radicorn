@@ -1,9 +1,12 @@
 (system-include "tonc.h")
+(relative-include "text-assert.h")
 
 (load "./light-core.carp")
 
 (load "./utils.carp")
 
+(load "./interrupt.carp")
+(load "./debug.carp")
 (load "./object.carp")
 (load "./background.carp")
 (load "./math.carp")

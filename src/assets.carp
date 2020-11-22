@@ -44,7 +44,7 @@
   (inline-defn sky-cbb [] 0)
   (inline-defn sky-sbb [] 29)
 
-  (defn setup []
+  (defn setup-backgrounds []
     (with Background
      (do
       (control (Zero) (bit-or* (cbb (city-cbb)) (sbb (city-sbb)) bg-8bpp bg-32-32 (priority 0)))
@@ -69,5 +69,5 @@
 
   (defn-do init []
     (memcopy)
-    (setup)))
+    (setup-backgrounds)))
 
