@@ -115,15 +115,15 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 built-assets/backsky.h: assets/backsky.png
 	@mkdir -p built-assets
-	@grit assets/backsky.png -p! -gB8 -mRtpf -o ./built-assets/backsky
+	@grit assets/backsky.png -p! -gB8 -mRtf -o ./built-assets/backsky
 
 built-assets/backearth.h: assets/backearth.png
 	@mkdir -p built-assets
-	@grit assets/backearth.png -p! -gB8 -mRtpf -o ./built-assets/backearth
+	@grit assets/backearth.png -p! -gB8 -mRtf -o ./built-assets/backearth
 
 built-assets/backcity.h: assets/backcity.png
 	@mkdir -p built-assets
-	@grit assets/backcity.png -p! -gB8 -mRtpf -o ./built-assets/backcity
+	@grit assets/backcity.png -p! -gB8 -mRtf -o ./built-assets/backcity
 
 built-assets/pal.h: assets/pal.png
 	@mkdir -p built-assets
