@@ -2,13 +2,16 @@
 
 (deftype Background
   Zero
-  One)
+  One
+  Two)
 
 (defmodule Background
   (register zero-x-control-ptr (Ptr Uint16) "&REG_BG0HOFS")
   (register zero-y-control-ptr (Ptr Uint16) "&REG_BG0VOFS")
   (register one-x-control-ptr (Ptr Uint16) "&REG_BG1HOFS")
   (register one-y-control-ptr (Ptr Uint16) "&REG_BG1VOFS")
+  (register two-x-control-ptr (Ptr Uint16) "&REG_BG2HOFS")
+  (register two-y-control-ptr (Ptr Uint16) "&REG_BG2VOFS")
 
   (defn control-offset [bg x y]
     (match bg
@@ -18,35 +21,30 @@
       One  (do
             (unsafe-set one-x-control-ptr x)
             (unsafe-set one-y-control-ptr y))
-      _    (do
-            (unsafe-set zero-x-control-ptr x)
-            (unsafe-set zero-y-control-ptr y))))
+      Two  (do
+            (unsafe-set two-x-control-ptr x)
+            (unsafe-set two-y-control-ptr y))))
 
-  (defn control-y-offset [bg x]
+  (defn control-y-offset [bg y]
     (match bg
-      Zero (do
-            (unsafe-set zero-y-control-ptr x))
-      One  (do
-            (unsafe-set one-y-control-ptr x))
-      _    (do
-            (unsafe-set zero-y-control-ptr x))))
+      Zero (unsafe-set zero-y-control-ptr y)
+      One  (unsafe-set one-y-control-ptr y)
+      Two  (unsafe-set two-y-control-ptr y)))
 
   (defn control-x-offset [bg x]
     (match bg
-      Zero (do
-            (unsafe-set zero-x-control-ptr x))
-      One  (do
-            (unsafe-set one-x-control-ptr x))
-      _    (do
-            (unsafe-set zero-x-control-ptr x))))
+      Zero (unsafe-set zero-x-control-ptr x)
+      One  (unsafe-set one-x-control-ptr x)
+      Two  (unsafe-set two-x-control-ptr x)))
 
   (register zero-control-ptr (Ptr Uint16) "&REG_BG0CNT")
   (register one-control-ptr (Ptr Uint16) "&REG_BG1CNT")
+  (register two-control-ptr (Ptr Uint16) "&REG_BG2CNT")
   (defn control [bg val]
     (match bg
      Zero (unsafe-set zero-control-ptr val)
      One  (unsafe-set one-control-ptr val)
-     _    (unsafe-set zero-control-ptr val)))
+     Two  (unsafe-set two-control-ptr val)))
 
 
   (register priority (Fn [Int] Uint16) "BG_PRIO")

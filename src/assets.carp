@@ -1,17 +1,23 @@
 (use ToncUtils)
 
 (defmodule Assets
-  (relative-include "../built-assets/backtop.h")
-  (register backtop-tiles (Ptr ()) "backtopTiles")
-  (register backtop-tiles-len Int "backtopTilesLen")
-  (register backtop-map (Ptr ()) "backtopMap")
-  (register backtop-map-len Int "backtopMapLen")
+  (relative-include "../built-assets/backsky.h")
+  (register backsky-tiles (Ptr ()) "backskyTiles")
+  (register backsky-tiles-len Int "backskyTilesLen")
+  (register backsky-map (Ptr ()) "backskyMap")
+  (register backsky-map-len Int "backskyMapLen")
 
-  (relative-include "../built-assets/backbottom.h")
-  (register backbottom-tiles (Ptr ()) "backbottomTiles")
-  (register backbottom-tiles-len Int "backbottomTilesLen")
-  (register backbottom-map (Ptr ()) "backbottomMap")
-  (register backbottom-map-len Int "backbottomMapLen")
+  (relative-include "../built-assets/backcity.h")
+  (register backcity-tiles (Ptr ()) "backcityTiles")
+  (register backcity-tiles-len Int "backcityTilesLen")
+  (register backcity-map (Ptr ()) "backcityMap")
+  (register backcity-map-len Int "backcityMapLen")
+
+  (relative-include "../built-assets/backearth.h")
+  (register backearth-tiles (Ptr ()) "backearthTiles")
+  (register backearth-tiles-len Int "backearthTilesLen")
+  (register backearth-map (Ptr ()) "backearthMap")
+  (register backearth-map-len Int "backearthMapLen")
 
   (relative-include "../built-assets/pal.h")
   (register pal (Ptr ()) "palPal")
@@ -25,21 +31,43 @@
   (register unicorn-tiles (Ptr ()) "unicornTiles")
   (register unicorn-tiles-len Int "unicornTilesLen")
 
-  (defn box-id [] 0)
-  (annotate box-id "inline")
-  (defn unicorn-id [] 9)
-  (annotate unicorn-id "inline")
-  (defn pal-id [] 0)
-  (annotate pal-id "inline")
+  (inline-defn box-id [] 0)
+  (inline-defn unicorn-id [] 9)
+  (inline-defn pal-id [] 0)
 
-  (defn-do init []
+  (inline-defn city-cbb [] 2)
+  (inline-defn city-sbb [] 31)
+
+  (inline-defn earth-cbb [] 1)
+  (inline-defn earth-sbb [] 30)
+
+  (inline-defn sky-cbb [] 0)
+  (inline-defn sky-sbb [] 29)
+
+  (defn setup []
+    (with Background
+     (do
+      (control (Zero) (bit-or* (cbb (city-cbb)) (sbb (city-sbb)) bg-8bpp bg-32-32 (priority 0)))
+      (control (One)  (bit-or* (cbb (earth-cbb)) (sbb (earth-sbb)) bg-8bpp bg-32-32 (priority 1)))
+      (control (Two)  (bit-or* (cbb (sky-cbb)) (sbb (sky-sbb)) bg-8bpp bg-32-32 (priority 2))))))
+
+  (defn-do memcopy []
     (memcpy (Object.ovram (box-id)) box-tiles box-tiles-len)
     (memcpy (Object.ovram (unicorn-id)) unicorn-tiles unicorn-tiles-len)
     (memcpy Object.pal-mem pal pal-len)
 
-    (memcpy (Background.cbb-mem 0) backtop-tiles backtop-tiles-len)
-    (memcpy (Background.sbb-mem 30) backtop-map backtop-map-len)
-    (memcpy (Background.cbb-mem 1) backbottom-tiles backbottom-tiles-len)
-    (memcpy (Background.sbb-mem 31) backbottom-map backbottom-map-len)
-    (memcpy Background.pal-mem pal pal-len)))
+    (memcpy (Background.cbb-mem (sky-cbb)) backsky-tiles backsky-tiles-len)
+    (memcpy (Background.sbb-mem (sky-sbb)) backsky-map backsky-map-len)
+
+    (memcpy (Background.cbb-mem (earth-cbb)) backearth-tiles backearth-tiles-len)
+    (memcpy (Background.sbb-mem (earth-sbb)) backearth-map backearth-map-len)
+
+    (memcpy (Background.cbb-mem (city-cbb)) backcity-tiles backcity-tiles-len)
+    (memcpy (Background.sbb-mem (city-sbb)) backcity-map backcity-map-len)
+
+    (memcpy Background.pal-mem pal pal-len))
+
+  (defn-do init []
+    (memcopy)
+    (setup)))
 

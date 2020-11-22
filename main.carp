@@ -13,11 +13,7 @@
  (do
   (Assets.init)
   (with Display
-    (control (bit-or* mode0  background0  background1 object object-1d)))
-  (with Background
-   (do
-    (control (Zero) (bit-or* (cbb 0) (sbb 30) bg-8bpp bg-32-32 (priority 1)))
-    (control (One) (bit-or* (cbb 1) (sbb 31) bg-8bpp bg-32-32 (priority 0)))))
+    (control (bit-or* mode0 background0 background1 background2 object object-1d)))
   (Object.oam-init)
   (let [world (World.new)]
     (forever-do

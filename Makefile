@@ -113,13 +113,17 @@ export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 .PHONY: $(BUILD) clean test
 .DEFAULT_GOAL := $(BUILD)
 
-built-assets/backbottom.h: assets/backbottom.png
+built-assets/backsky.h: assets/backsky.png
 	@mkdir -p built-assets
-	@grit assets/backbottom.png -p! -gB8 -mRtpf -o ./built-assets/backbottom
+	@grit assets/backsky.png -p! -gB8 -mRtpf -o ./built-assets/backsky
 
-built-assets/backtop.h: assets/backtop.png
+built-assets/backearth.h: assets/backearth.png
 	@mkdir -p built-assets
-	@grit assets/backtop.png -p! -gB8 -mRtpf -o ./built-assets/backtop
+	@grit assets/backearth.png -p! -gB8 -mRtpf -o ./built-assets/backearth
+
+built-assets/backcity.h: assets/backcity.png
+	@mkdir -p built-assets
+	@grit assets/backcity.png -p! -gB8 -mRtpf -o ./built-assets/backcity
 
 built-assets/pal.h: assets/pal.png
 	@mkdir -p built-assets
@@ -133,7 +137,7 @@ built-assets/unicorn.h: assets/unicorn.png
 	@mkdir -p built-assets
 	@grit assets/unicorn.png -p! -gB8 -o ./built-assets/unicorn
 
-built-assets: built-assets/box.h built-assets/unicorn.h built-assets/pal.h built-assets/backtop.h built-assets/backbottom.h
+built-assets: built-assets/box.h built-assets/unicorn.h built-assets/pal.h built-assets/backcity.h built-assets/backearth.h built-assets/backsky.h
 	@echo --- Assets
 
 out/main.c: $(wildcard **/*.carp) $(wildcard *.carp)

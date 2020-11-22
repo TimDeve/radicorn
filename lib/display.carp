@@ -4,6 +4,8 @@
   (register control-ptr (Ptr Int) "&REG_DISPCNT")
   (defn control [val] (unsafe-set control-ptr val))
   (register mode0 Uint16 "DCNT_MODE0")
+  (register mode1 Uint16 "DCNT_MODE1")
+  (register mode2 Uint16 "DCNT_MODE2")
   (register mode3 Uint16 "DCNT_MODE3")
   (register background0 Uint16 "DCNT_BG0")
   (register background1 Uint16 "DCNT_BG1")
