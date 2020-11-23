@@ -23,11 +23,12 @@
 (defn render-player [player]
   (with Player
    (do
-    (buffer-push 
+    (buffer-push
       (set-pos (match-ref (state player)
                   PlayerState.Jumping (make-unicorn 2)
+                  (PlayerState.Running tik) (if (>= tik &15) (make-unicorn 1) (make-unicorn 0))
                   _                   (make-unicorn 0))
-               @(x player) 
+               @(x player)
                @(y player))))))
 
 (defn-do render-background [world]

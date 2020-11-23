@@ -21,14 +21,21 @@
  (defn hitbox-height [obs] (height))
  (implements rect-height Obstacle.hitbox-height))
 
-(deftype PlayerState Running Jumping Falling)
+(deftype PlayerState (Running [Int]) Jumping Falling)
 (deftype Player [x Int y Int state PlayerState])
 (defmodule Player
  (defn height [] 32)
  (annotate height "inline")
  (defn width [] 16)
  (annotate width "inline")
- (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running)))
+ (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running 1)))
+
+ (defn tick [player]
+  (update-state player &(fn [state]
+                         (match state
+                           (PlayerState.Running tik)
+                           (PlayerState.Running (if (>= tik 30) 1 (inc tik)))
+                           _             state))))
 
  (defn hitbox-x-pos [player] @(x player))
  (implements x-pos Player.hitbox-x-pos)
