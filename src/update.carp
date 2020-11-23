@@ -23,7 +23,9 @@
 (defn update-obstacle-position [obstacle]
   (Obstacle.update-x
    obstacle
-   &(fn [x] (if (<= x 0) (+ (Rand.range 10 160) Video.screen-width) (dec (dec x))))))
+   &(fn [x] (if (<= x 0)
+              (+ (Rand.range 50 Video.screen-width) Video.screen-width)
+              (- x 2)))))
 
 (defn update-obstacles-position [obstacles]
   (Array.endo-map
