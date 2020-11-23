@@ -23,7 +23,7 @@
 (defn update-obstacle-position [obstacle]
   (Obstacle.update-x
    obstacle
-   &(fn [x] (if (<= x 0) (* 2 Video.screen-width) (dec (dec x))))))
+   &(fn [x] (if (<= x 0) (+ (Rand.range 10 160) Video.screen-width) (dec (dec x))))))
 
 (defn update-obstacles-position [obstacles]
   (Array.endo-map
@@ -42,10 +42,11 @@
 (defn update-world-state [world]
   (if (Key.hit? Key.Start)
       (match-ref (World.state &world)
-         WorldState.Playing (World.set-state world (WorldState.Paused))
-         WorldState.Dead    (World.new)
-         _                  (World.set-state world (WorldState.Playing)))
-      world))
+         WorldState.Playing       (World.set-state world (WorldState.Paused))
+         WorldState.Dead          (World.new)
+         (WorldState.Intro tik)   (do (Rand.set-seed @tik) (World.set-state world (WorldState.Playing)))
+         _                        (World.set-state world (WorldState.Playing)))
+      (World.tick world)))
 
 (defn check-for-collisions [world]
   (let [world* &world]

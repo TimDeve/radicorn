@@ -48,18 +48,26 @@
  (defn hitbox-height [player] (height))
  (implements rect-height Player.hitbox-height))
 
-(deftype WorldState Intro Playing Paused Dead)
+(deftype WorldState (Intro [Int]) Playing Paused Dead)
 (deftype World [p Player
                 obstacles (Array Obstacle)
                 state WorldState
                 back-zero-x Int
                 back-one-x Int])
+
 (defmodule World
+ (defn tick [world]
+  (update-state world
+                &(fn [state]
+                  (match state
+                    (WorldState.Intro tik) (WorldState.Intro (inc tik))
+                    _                      state))))
+
  (defn new []
   (World.init (Player.new)
               [(Obstacle.init Video.screen-width Color.dead)
-               (Obstacle.init (+ Video.screen-width 140) Color.magenta)]
-              (WorldState.Intro)
+               (Obstacle.init (* 2 Video.screen-width) Color.magenta)]
+              (WorldState.Intro 0)
               0
               0)))
 

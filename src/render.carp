@@ -58,8 +58,8 @@
 (defn render [world]
   (do
     (match-ref (World.state world)
-      WorldState.Playing (render-playing-game world)
-      WorldState.Paused (render-paused-game world)
-      WorldState.Intro (render-start-screen)
-      WorldState.Dead (render-death-screen))
+      WorldState.Playing   (render-playing-game world)
+      WorldState.Paused    (render-paused-game world)
+      (WorldState.Intro _) (render-start-screen)
+      WorldState.Dead      (render-death-screen))
     (Object.buffer-blit)))
