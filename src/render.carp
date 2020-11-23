@@ -1,16 +1,18 @@
-(use Object)
-
-(use Assets)
+(use-all Object Assets Debug)
 
 (defn make-box []
   (init (bit-or attr0-square attr0-8bpp)
         attr1-size-16
         (attr2-build (box-id) (pal-id) 0)))
 
-(defn make-unicorn []
+(defn make-unicorn [frame]
   (init (bit-or attr0-tall attr0-8bpp)
         attr1-size-16-32
-        (attr2-build (unicorn-id) (pal-id) 0)))
+        (case frame
+         0 (attr2-build (unicorn-id) (pal-id) 0)
+         1 (attr2-build (+ (unicorn-id) 16) (pal-id) 0)
+         2 (attr2-build (+ (unicorn-id) 32) (pal-id) 0)
+         (halt "There isn't a frame for this"))))
 
 (defn render-obstacles [obstacles]
   (foreach [obstacle obstacles]
@@ -21,7 +23,12 @@
 (defn render-player [player]
   (with Player
    (do
-    (buffer-push (set-pos (make-unicorn) @(x player) @(y player))))))
+    (buffer-push 
+      (set-pos (match-ref (state player)
+                  PlayerState.Jumping (make-unicorn 2)
+                  _                   (make-unicorn 0))
+               @(x player) 
+               @(y player))))))
 
 (defn-do render-background [world]
   (Background.control-x-offset (Background.Zero) @(World.back-zero-x world))

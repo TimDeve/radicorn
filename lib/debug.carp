@@ -1,9 +1,10 @@
 (defmodule Debug
- (deftemplate halt (Fn [(Ref String)] ())
-                   "void $NAME(String *str)"
+ (deftemplate halt (Fn [(Ref String)] a)
+                   "$a $NAME(String *str)"
                    "$DECL {
                      REG_DISPCNT = DCNT_MODE0 | DCNT_BG0;
                      tte_init_se_default(0, BG_CBB(0)|BG_SBB(31));
                      tte_write(*str);
-                     while(1);
+                     while(true);
+                     return ($a)0;
                    }"))
