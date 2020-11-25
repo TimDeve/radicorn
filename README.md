@@ -2,6 +2,8 @@
 
 A GBA game built with [Carp](https://github.com/carp-lang/Carp).
 
+[Play it online...](https://radicorn.do.timdeve.com/)
+
 ## Building
 
 Has to be run twice after a `clean`...
