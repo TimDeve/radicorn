@@ -26,7 +26,7 @@
     (buffer-push
       (set-pos (match-ref (state player)
                   PlayerState.Jumping (make-unicorn 2)
-                  (PlayerState.Running tik) (if (>= tik &15) (make-unicorn 1) (make-unicorn 0))
+                  (PlayerState.Running tik) (if (>= tik &15) (make-unicorn 0) (make-unicorn 1))
                   _                   (make-unicorn 0))
                @(x player)
                @(y player))))))
