@@ -15,7 +15,8 @@
   (Interrupt.enable-vblank)
   (Assets.init)
   (with Display
-    (control (bit-or* mode0 background0 background1 background2 object object-1d)))
+    (control (bit-or* mode0 background0 background1 background2 background3 object object-1d)))
+  (Text.init 3 31 0)
   (Object.oam-init)
   (let [world (World.new)]
     (forever-do

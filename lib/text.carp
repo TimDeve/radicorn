@@ -1,0 +1,25 @@
+(defmodule Text
+  (deftemplate init (Fn [Int Int Int] ())
+                    "void $NAME(int bg_number, int bg_cbb, int bg_sbb)"
+                    "$DECL {
+                      tte_init_se_default(bg_number, BG_CBB(bg_cbb) | BG_SBB(bg_sbb));
+                    }")
+
+  (register set-pos (Fn [Int Int] ()) "tte_set_pos")
+  (register erase-line (Fn [] ()) "tte_erase_line")
+  (deftemplate write (Fn [(Ref String)] Int)
+                     "inline int $NAME(String *str)"
+                     "$DECL {
+                       return tte_write(*str);
+                     }")
+  (deftemplate write-fmt (Fn [(Ref String) (Ref a)] Int)
+                         "inline int $NAME(String *str, $a *arg)"
+                         "$DECL {
+                           char buf[512];
+                           int len = snprintf(buf, 512, *str, *arg);
+                           if (len) {
+                             return tte_write(buf);
+                           }
+                           return len;
+                         }"))
+

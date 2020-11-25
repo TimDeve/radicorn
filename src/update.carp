@@ -64,10 +64,34 @@
 (defn update-back-zero [x] (inc x))
 (defn update-back-one [x] (inc (inc x)))
 
+(defn obs-past-player [obs] (< (Obstacle.x obs) &8))
+
+(defn mark-obsctacles-as-jumped [obstacles]
+  (Array.endo-map
+    &(fn [obs]
+      (let [past (obs-past-player &obs)]
+        (Obstacle.set-jumped obs past)))
+    obstacles))
+
+(defn score-from-obstacle [obs]
+ (if @(Obstacle.jumped obs)
+  0
+  (if (obs-past-player obs) 1 0)))
+
+(defn calculate-score [world]
+  (let [new-score
+        (Array.reduce &(fn [acc obs] (+ acc (score-from-obstacle obs)))
+                      @(World.score &world)
+                      (World.obstacles &world))]
+    (=> world
+      (World.set-score new-score)
+      (World.update-obstacles &(fn [obstacles] (mark-obsctacles-as-jumped obstacles))))))
+
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
      WorldState.Playing
      (=> world
+         (calculate-score)
          (World.update-p &update-player-state)
          (World.update-back-zero-x &update-back-zero)
          (World.update-back-one-x &update-back-one)

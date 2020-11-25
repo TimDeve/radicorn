@@ -1,6 +1,6 @@
 (def floor-y 120)
 
-(deftype Obstacle [x Int color Color])
+(deftype Obstacle [x Int jumped Bool])
 (defmodule Obstacle
  (defn height [] 16)
  (annotate height "inline")
@@ -52,6 +52,7 @@
 (deftype World [p Player
                 obstacles (Array Obstacle)
                 state WorldState
+                score Int
                 back-zero-x Int
                 back-one-x Int])
 
@@ -65,9 +66,10 @@
 
  (defn new []
   (World.init (Player.new)
-              [(Obstacle.init Video.screen-width Color.dead)
-               (Obstacle.init (* 2 Video.screen-width) Color.magenta)]
+              [(Obstacle.init Video.screen-width false)
+               (Obstacle.init (* 2 Video.screen-width) false)]
               (WorldState.Intro 0)
+              0
               0
               0)))
 

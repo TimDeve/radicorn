@@ -9,6 +9,7 @@
 (load "./debug.carp")
 (load "./object.carp")
 (load "./background.carp")
+(load "./text.carp")
 (load "./math.carp")
 (load "./rand.carp")
 (load "./color.carp")
