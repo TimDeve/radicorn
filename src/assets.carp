@@ -23,15 +23,15 @@
   (register pal (Ptr ()) "palPal")
   (register pal-len Int "palPalLen")
 
-  (relative-include "../built-assets/box.h")
-  (register box-tiles (Ptr ()) "boxTiles")
-  (register box-tiles-len Int "boxTilesLen")
+  (relative-include "../built-assets/cat.h")
+  (register cat-tiles (Ptr ()) "catTiles")
+  (register cat-tiles-len Int "catTilesLen")
 
   (relative-include "../built-assets/unicorn.h")
   (register unicorn-tiles (Ptr ()) "unicornTiles")
   (register unicorn-tiles-len Int "unicornTilesLen")
 
-  (inline-defn box-id [] 0)
+  (inline-defn cat-id [] 0)
   (inline-defn unicorn-id [] 9)
   (inline-defn pal-id [] 0)
 
@@ -52,7 +52,7 @@
       (control (Two)  (bit-or* (cbb (sky-cbb)) (sbb (sky-sbb)) bg-8bpp bg-32-32 (priority 2))))))
 
   (defn-do memcopy []
-    (memcpy (Object.ovram (box-id)) box-tiles box-tiles-len)
+    (memcpy (Object.ovram (cat-id)) cat-tiles cat-tiles-len)
     (memcpy (Object.ovram (unicorn-id)) unicorn-tiles unicorn-tiles-len)
     (memcpy Object.pal-mem pal pal-len)
 

@@ -1,9 +1,9 @@
 (use-all Object Assets Debug)
 
-(defn make-box []
+(defn make-cat []
   (init (bit-or attr0-square attr0-8bpp)
         attr1-size-16
-        (attr2-build (box-id) (pal-id) 0)))
+        (attr2-build (cat-id) (pal-id) 0)))
 
 (defn make-unicorn [frame]
   (init (bit-or attr0-tall attr0-8bpp)
@@ -18,7 +18,7 @@
   (foreach [obstacle obstacles]
    (with Obstacle
     (when (< @(x obstacle) (- Video.screen-width (width)))
-      (buffer-push (set-pos (make-box) @(x obstacle) (y)))))))
+      (buffer-push (set-pos (make-cat) @(x obstacle) (y)))))))
 
 (defn render-player [player]
   (with Player
@@ -38,7 +38,7 @@
 (defn-do render-score [world]
   (Text.set-pos 0 0)
   (Text.erase-line)
-  (ignore (Text.write-fmt "Score: %i" (World.score world))))
+  (ignore (Text.write-fmt "Score:%i" (World.score world))))
 
 (defn render-playing-game [world]
   (do
@@ -50,15 +50,15 @@
 (defn render-paused-game [world]
   (do
    (render-playing-game world)
-   (buffer-push (set-pos (make-box) 114 0))))
+   (buffer-push (set-pos (make-cat) 114 0))))
 
 (defn render-start-screen []
   (do 
-   (buffer-push (set-pos (make-box) 0 0))))
+   (buffer-push (set-pos (make-cat) 0 0))))
 
 (defn render-death-screen []
   (do
-   (buffer-push (set-pos (make-box) 224 0))))
+   (buffer-push (set-pos (make-cat) 224 0))))
 
 (sig render (Fn [(Ref World)] ()))
 (defn render [world]
