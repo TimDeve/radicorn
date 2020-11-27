@@ -129,15 +129,15 @@ built-assets/pal.h: assets/pal.png
 	@mkdir -p built-assets
 	@grit assets/pal.png -pn32 -g! -o ./built-assets/pal
 
-built-assets/cat.h: assets/cat.png
+built-assets/bin.h: assets/bin.png
 	@mkdir -p built-assets
-	@grit assets/cat.png -p! -gB8 -o ./built-assets/cat
+	@grit assets/bin.png -p! -gB8 -o ./built-assets/bin
 
 built-assets/unicorn.h: assets/unicorn.png
 	@mkdir -p built-assets
 	@grit assets/unicorn.png -p! -gB8 -o ./built-assets/unicorn
 
-built-assets: built-assets/cat.h built-assets/unicorn.h built-assets/pal.h built-assets/backcity.h built-assets/backearth.h built-assets/backsky.h
+built-assets: built-assets/bin.h built-assets/unicorn.h built-assets/pal.h built-assets/backcity.h built-assets/backearth.h built-assets/backsky.h
 	@echo --- Assets
 
 out/main.c: $(wildcard **/*.carp) $(wildcard *.carp)
