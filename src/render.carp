@@ -47,18 +47,19 @@
    (render-obstacles (World.obstacles world))
    (render-player (World.p world))))
 
-(defn render-paused-game [world]
-  (do
-   (render-playing-game world)
-   (buffer-push (set-pos (make-cat) 114 0))))
+(defn-do render-paused-game [world]
+  (render-playing-game world)
+  (Text.set-pos 100 0)
+  (ignore (Text.write "Paused")))
 
-(defn render-start-screen []
-  (do 
-   (buffer-push (set-pos (make-cat) 0 0))))
+(defn-do render-start-screen []
+  (Text.erase-line)
+  (Text.set-pos 70 0)
+  (ignore (Text.write "Press start...")))
 
-(defn render-death-screen []
-  (do
-   (buffer-push (set-pos (make-cat) 224 0))))
+(defn-do render-death-screen []
+  (Text.set-pos 70 0)
+  (ignore (Text.write "Start to try again.")))
 
 (sig render (Fn [(Ref World)] ()))
 (defn render [world]
