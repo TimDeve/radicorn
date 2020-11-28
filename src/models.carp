@@ -1,18 +1,27 @@
 (def floor-y 120)
 
-(deftype Obstacle [x Int jumped Bool])
+(deftype ObstacleType
+  Low
+  High)
+
+(use ObstacleType)
+
+(deftype Obstacle [x Int passed Bool ty ObstacleType])
 (defmodule Obstacle
  (defn height [] 16)
  (annotate height "inline")
  (defn width [] 16)
  (annotate width "inline")
- (defn y [] (- floor-y (height)))
+ (defn y [obs]
+  (match-ref (ty obs)
+    Low (- floor-y (height))
+    High (- floor-y (+ (height) (height)))))
  (annotate y "inline")
 
  (defn hitbox-x-pos [obs] @(x obs))
  (implements x-pos Obstacle.hitbox-x-pos)
  (sig hitbox-y-pos (Fn [(Ref Obstacle)] Int))
- (defn hitbox-y-pos [obs] (y))
+ (defn hitbox-y-pos [obs] (y obs))
  (implements y-pos Obstacle.hitbox-y-pos)
  (sig hitbox-width (Fn [(Ref Obstacle)] Int))
  (defn hitbox-width [obs] (width))
@@ -21,7 +30,7 @@
  (defn hitbox-height [obs] (height))
  (implements rect-height Obstacle.hitbox-height))
 
-(deftype PlayerState (Running [Int]) Jumping Falling)
+(deftype PlayerState (Running [Int]) Jumping Falling Dodging)
 (deftype Player [x Int y Int state PlayerState])
 (defmodule Player
  (defn height [] 32)
@@ -39,13 +48,20 @@
 
  (defn hitbox-x-pos [player] @(x player))
  (implements x-pos Player.hitbox-x-pos)
- (defn hitbox-y-pos [player] @(y player))
+ (defn hitbox-y-pos [player]
+  (match-ref (state player)
+    PlayerState.Dodging (+ @(y player) 16)
+    _                    @(y player)))
+
  (implements y-pos Player.hitbox-y-pos)
  (sig hitbox-width (Fn [(Ref Player)] Int))
  (defn hitbox-width [player] (width))
  (implements rect-width Player.hitbox-width)
  (sig hitbox-height (Fn [(Ref Player)] Int))
- (defn hitbox-height [player] (height))
+ (defn hitbox-height [player] 
+  (match-ref (state player)
+    PlayerState.Dodging (- (height) 16)
+    _                    (height)))
  (implements rect-height Player.hitbox-height))
 
 (deftype WorldState (Intro [Int]) Playing Paused Dead)
@@ -66,8 +82,8 @@
 
  (defn new []
   (World.init (Player.new)
-              [(Obstacle.init Video.screen-width false)
-               (Obstacle.init (* 2 Video.screen-width) false)]
+              [(Obstacle.init Video.screen-width false (High))
+               (Obstacle.init (* 2 Video.screen-width) false (High))]
               (WorldState.Intro 0)
               0
               0

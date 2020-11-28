@@ -5,6 +5,11 @@
         attr1-size-16
         (attr2-build (bin-id) (pal-id) 0)))
 
+(defn make-witch []
+  (init (bit-or attr0-square attr0-8bpp)
+        attr1-size-16
+        (attr2-build (witch-id) (pal-id) 0)))
+
 (defn make-unicorn [frame]
   (init (bit-or attr0-tall attr0-8bpp)
         attr1-size-16-32
@@ -12,13 +17,19 @@
          0 (attr2-build (unicorn-id) (pal-id) 0)
          1 (attr2-build (+ (unicorn-id) 16) (pal-id) 0)
          2 (attr2-build (+ (unicorn-id) 32) (pal-id) 0)
+         3 (attr2-build (+ (unicorn-id) 48) (pal-id) 0)
          (halt "There isn't a frame for this"))))
+
+(defn make-obs [obs]
+  (match-ref (Obstacle.ty obs)
+    (ObstacleType.Low) (make-bin)
+    (ObstacleType.High) (make-witch)))
 
 (defn render-obstacles [obstacles]
   (foreach [obstacle obstacles]
    (with Obstacle
     (when (< @(x obstacle) (- Video.screen-width (width)))
-      (buffer-push (set-pos (make-bin) @(x obstacle) (y)))))))
+      (buffer-push (set-pos (make-obs obstacle) @(x obstacle) (y obstacle)))))))
 
 (defn render-player [player]
   (with Player
@@ -26,6 +37,7 @@
     (buffer-push
       (set-pos (match-ref (state player)
                   PlayerState.Jumping (make-unicorn 2)
+                  PlayerState.Dodging (make-unicorn 3)
                   (PlayerState.Running tik) (if (>= tik &15) (make-unicorn 0) (make-unicorn 1))
                   _                   (make-unicorn 0))
                @(x player)

@@ -27,12 +27,17 @@
   (register bin-tiles (Ptr ()) "binTiles")
   (register bin-tiles-len Int "binTilesLen")
 
+  (relative-include "../built-assets/witch.h")
+  (register witch-tiles (Ptr ()) "witchTiles")
+  (register witch-tiles-len Int "witchTilesLen")
+
   (relative-include "../built-assets/unicorn.h")
   (register unicorn-tiles (Ptr ()) "unicornTiles")
   (register unicorn-tiles-len Int "unicornTilesLen")
 
   (inline-defn bin-id [] 0)
-  (inline-defn unicorn-id [] 9)
+  (inline-defn witch-id [] 9)
+  (inline-defn unicorn-id [] 17)
   (inline-defn pal-id [] 0)
 
   (inline-defn city-cbb [] 2)
@@ -53,6 +58,7 @@
 
   (defn-do memcopy []
     (memcpy (Object.ovram (bin-id)) bin-tiles bin-tiles-len)
+    (memcpy (Object.ovram (witch-id)) witch-tiles witch-tiles-len)
     (memcpy (Object.ovram (unicorn-id)) unicorn-tiles unicorn-tiles-len)
     (memcpy Object.pal-mem pal pal-len)
 

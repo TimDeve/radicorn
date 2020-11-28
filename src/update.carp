@@ -12,20 +12,28 @@
       (match-ref (state &player)
         (PlayerState.Running _) (if (is-down? A)
                                  (set-state player (PlayerState.Jumping))
-                                 (tick player))
+                                 (if (is-down? Down)
+                                  (set-state player (PlayerState.Dodging))
+                                  (tick player)))
         PlayerState.Jumping     (if (<= (y &player) &(- floor-y 75))
                                  (set-state player (PlayerState.Falling))
                                  player)
         PlayerState.Falling     (if (>= (y &player) &(- floor-y (height)))
                                  (set-state player (PlayerState.Running 1))
-                                 player)))))
+                                 player)
+        PlayerState.Dodging     (if (is-down? Down)
+                                 (set-state player (PlayerState.Dodging))
+                                 (set-state player (PlayerState.Running 0)))))))
 
-(defn update-obstacle-position [obstacle]
-  (Obstacle.update-x
-   obstacle
-   &(fn [x] (if (<= x 0)
-              (+ (Rand.range 50 Video.screen-width) Video.screen-width)
-              (- x 2)))))
+(defn update-obstacle-position [obs]
+  (Obstacle.init
+    (if (<= (Obstacle.x &obs) &0)
+     (+ (Rand.range 50 Video.screen-width) Video.screen-width)
+     (- @(Obstacle.x &obs) 2))
+    @(Obstacle.passed &obs)
+    (if (<= (Obstacle.x &obs) &0)
+     (if (= 0 (Rand.range 0 10)) (ObstacleType.High) (ObstacleType.Low))
+     @(Obstacle.ty &obs))))
 
 (defn update-obstacles-position [obstacles]
   (Array.endo-map
@@ -66,15 +74,15 @@
 
 (defn obs-past-player [obs] (< (Obstacle.x obs) &8))
 
-(defn mark-obsctacles-as-jumped [obstacles]
+(defn mark-obsctacles-as-passed [obstacles]
   (Array.endo-map
     &(fn [obs]
       (let [past (obs-past-player &obs)]
-        (Obstacle.set-jumped obs past)))
+        (Obstacle.set-passed obs past)))
     obstacles))
 
 (defn score-from-obstacle [obs]
- (if @(Obstacle.jumped obs)
+ (if @(Obstacle.passed obs)
   0
   (if (obs-past-player obs) 1 0)))
 
@@ -85,7 +93,7 @@
                       (World.obstacles &world))]
     (=> world
       (World.set-score new-score)
-      (World.update-obstacles &(fn [obstacles] (mark-obsctacles-as-jumped obstacles))))))
+      (World.update-obstacles &(fn [obstacles] (mark-obsctacles-as-passed obstacles))))))
 
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
