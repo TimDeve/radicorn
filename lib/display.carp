@@ -1,7 +1,10 @@
+(load "./types.carp")
+(load "./utils.carp")
+
 (use ToncUtils)
 
 (defmodule Display
-  (register control-ptr (Ptr Int) "&REG_DISPCNT")
+  (register control-ptr (Ptr Vu32) "(&REG_DISPCNT)")
   (defn control [val] (unsafe-set control-ptr val))
   (register mode0 Uint16 "DCNT_MODE0")
   (register mode1 Uint16 "DCNT_MODE1")

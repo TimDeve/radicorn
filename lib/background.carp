@@ -1,3 +1,6 @@
+(load "./types.carp")
+(load "./utils.carp")
+
 (use ToncUtils)
 
 (deftype Background
@@ -7,12 +10,12 @@
   Three)
 
 (defmodule Background
-  (register zero-x-control-ptr (Ptr Uint16) "&REG_BG0HOFS")
-  (register zero-y-control-ptr (Ptr Uint16) "&REG_BG0VOFS")
-  (register one-x-control-ptr (Ptr Uint16) "&REG_BG1HOFS")
-  (register one-y-control-ptr (Ptr Uint16) "&REG_BG1VOFS")
-  (register two-x-control-ptr (Ptr Uint16) "&REG_BG2HOFS")
-  (register two-y-control-ptr (Ptr Uint16) "&REG_BG2VOFS")
+  (register zero-x-control-ptr (Ptr Vu16) "(&REG_BG0HOFS)")
+  (register zero-y-control-ptr (Ptr Vu16) "(&REG_BG0VOFS)")
+  (register one-x-control-ptr  (Ptr Vu16) "(&REG_BG1HOFS)")
+  (register one-y-control-ptr  (Ptr Vu16) "(&REG_BG1VOFS)")
+  (register two-x-control-ptr  (Ptr Vu16) "(&REG_BG2HOFS)")
+  (register two-y-control-ptr  (Ptr Vu16) "(&REG_BG2VOFS)")
 
   (defn control-offset [bg x y]
     (match bg
@@ -41,9 +44,9 @@
       Two  (unsafe-set two-x-control-ptr x)
       _    (Debug.halt "Unhandled match case")))
 
-  (register zero-control-ptr (Ptr Uint16) "&REG_BG0CNT")
-  (register one-control-ptr (Ptr Uint16) "&REG_BG1CNT")
-  (register two-control-ptr (Ptr Uint16) "&REG_BG2CNT")
+  (register zero-control-ptr (Ptr Vu16) "(&REG_BG0CNT)")
+  (register one-control-ptr  (Ptr Vu16) "(&REG_BG1CNT)")
+  (register two-control-ptr  (Ptr Vu16) "(&REG_BG2CNT)")
   (defn control [bg val]
     (match bg
      Zero (unsafe-set zero-control-ptr val)

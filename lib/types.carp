@@ -1,0 +1,2 @@
+(register-type Vu32 "vu32")
+(register-type Vu16 "vu16")
