@@ -59,7 +59,7 @@
   (Obstacle.init
     (if (<= (Obstacle.x &obs) &0)
      (random-reset-position furthest-x)
-     (- @(Obstacle.x &obs) 2))
+     (- @(Obstacle.x &obs) 3))
     @(Obstacle.passed &obs)
     (if (<= (Obstacle.x &obs) &0)
      (if (= 0 (Rand.range 0 10)) (ObstacleType.High) (ObstacleType.Low))
@@ -101,7 +101,7 @@
         (WorldState.Playing))))))
 
 (defn update-back-zero [x] (inc x))
-(defn update-back-one [x] (inc (inc x)))
+(defn update-back-one [x] (+ x 3))
 
 (defn obs-past-player [obs] (< (Obstacle.x obs) &8))
 
