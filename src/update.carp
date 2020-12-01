@@ -46,8 +46,8 @@
     obs))
 
 (defn too-close-to-other-obstacle? [new-pos furthest-x]
-  (or (and (< new-pos furthest-x) (> @new-pos (- @furthest-x 90)))
-      (and (> new-pos furthest-x) (< @new-pos (+ @furthest-x 90)))))
+  (or (and (<= new-pos furthest-x) (>= @new-pos (- @furthest-x 110)))
+      (and (>= new-pos furthest-x) (<= @new-pos (+ @furthest-x 110)))))
 
 (defn random-reset-position [furthest-x]
   (let [new-pos (+ (Rand.range 0 120) Video.screen-width)]
