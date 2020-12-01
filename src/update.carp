@@ -52,7 +52,7 @@
 (defn random-reset-position [furthest-x]
   (let [new-pos (+ (Rand.range 0 120) Video.screen-width)]
     (if (too-close-to-other-obstacle? &new-pos furthest-x)
-      (+ @furthest-x Video.screen-width)
+      (+ @furthest-x (Rand.range 130 200))
       new-pos)))
 
 (defn update-obstacle-position [obs furthest-x]
