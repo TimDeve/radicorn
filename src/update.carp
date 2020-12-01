@@ -1,3 +1,10 @@
+(load "../lib/key.carp")
+(load "../lib/video.carp")
+(load "../lib/rand.carp")
+
+(load "./collisions.carp")
+(load "./models.carp")
+
 (defn jump-button? []
  (with Key
   (or (is-down? A) (is-down? Up))))
@@ -29,10 +36,29 @@
                                   (set-state player (PlayerState.Dodging))
                                   (set-state player (PlayerState.Running 0)))))))
 
-(defn update-obstacle-position [obs]
+(defn furthest-obstacle [obs]
+  (Array.reduce
+    &(fn [acc ob]
+      (if (>= (Obstacle.x ob) &acc)
+          @(Obstacle.x ob)
+          acc))
+    0
+    obs))
+
+(defn too-close-to-other-obstacle? [new-pos furthest-x]
+  (or (and (< new-pos furthest-x) (> @new-pos (- @furthest-x 90)))
+      (and (> new-pos furthest-x) (< @new-pos (+ @furthest-x 90)))))
+
+(defn random-reset-position [furthest-x]
+  (let [new-pos (+ (Rand.range 0 120) Video.screen-width)]
+    (if (too-close-to-other-obstacle? &new-pos furthest-x)
+      (+ @furthest-x Video.screen-width)
+      new-pos)))
+
+(defn update-obstacle-position [obs furthest-x]
   (Obstacle.init
     (if (<= (Obstacle.x &obs) &0)
-     (+ (Rand.range 50 Video.screen-width) Video.screen-width)
+     (random-reset-position furthest-x)
      (- @(Obstacle.x &obs) 2))
     @(Obstacle.passed &obs)
     (if (<= (Obstacle.x &obs) &0)
@@ -40,9 +66,10 @@
      @(Obstacle.ty &obs))))
 
 (defn update-obstacles-position [obstacles]
-  (Array.endo-map
-   &update-obstacle-position
-   obstacles))
+  (let [furthest-x (furthest-obstacle &obstacles)]
+    (Array.endo-map
+     &(fn [obs] (update-obstacle-position obs &furthest-x))
+     obstacles)))
 
 (defn update-position [world]
   (match-ref (World.state &world)
