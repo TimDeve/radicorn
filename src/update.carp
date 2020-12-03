@@ -52,7 +52,7 @@
 (defn random-reset-position [furthest-x]
   (let [new-pos (+ (Rand.range 0 120) Video.screen-width)]
     (if (too-close-to-other-obstacle? &new-pos furthest-x)
-      (+ @furthest-x (Rand.range 130 200))
+      (+ @furthest-x (Rand.range 130 500))
       new-pos)))
 
 (defn update-obstacle-position [obs furthest-x]
@@ -100,9 +100,6 @@
         (WorldState.Dead)
         (WorldState.Playing))))))
 
-(defn update-back-zero [x] (inc x))
-(defn update-back-one [x] (+ x 3))
-
 (defn obs-past-player [obs] (< (Obstacle.x obs) &8))
 
 (defn mark-obsctacles-as-passed [obstacles]
@@ -132,8 +129,8 @@
      (=> world
          (calculate-score)
          (World.update-p &update-player-state)
-         (World.update-back-zero-x &update-back-zero)
-         (World.update-back-one-x &update-back-one)
+         (World.update-back-zero-x &(fn [x] (inc x)))
+         (World.update-back-one-x  &(fn [x] (+ x 3)))
          (check-for-collisions))
      _ world))
 
