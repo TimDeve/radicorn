@@ -81,13 +81,20 @@
     _ world))
 
 (defn update-world-state [world]
-  (if (Key.hit? Key.Start)
-      (match-ref (World.state &world)
-         WorldState.Playing       (World.set-state world (WorldState.Paused))
-         WorldState.Dead          (World.new)
-         (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.set-state world (WorldState.Playing)))
-         _                        (World.set-state world (WorldState.Playing)))
-      (World.tick world)))
+  (=> world
+    (World.tick)
+    ((fn [wrld]
+      (if (Key.hit? Key.Start)
+          (match-ref (World.state &wrld)
+             WorldState.Playing       (World.set-state wrld (WorldState.Paused))
+             WorldState.Dead          (World.new)
+             (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.set-state wrld (WorldState.new-intro)))
+             WorldState.Paused        (World.set-state wrld (WorldState.Playing))
+             _                        wrld)
+
+          (match-ref (World.state &wrld)
+             (WorldState.Intro tik)   (if (>= tik &0) (World.set-state wrld (WorldState.Playing)) wrld)
+             _                        wrld))))))
 
 (defn check-for-collisions [world]
   (let [world* &world]
@@ -123,20 +130,26 @@
       (World.set-score new-score)
       (World.update-obstacles &(fn [obstacles] (mark-obsctacles-as-passed obstacles))))))
 
+(defn update-backgrounds [world]
+  (match-ref (World.state &world)
+     (WorldState.Paused) world
+     _                  (=> world
+                         (World.update-back-zero-x &(fn [x] (inc x)))
+                         (World.update-back-one-x  &(fn [x] (+ x 3))))))
+
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
      WorldState.Playing
      (=> world
          (calculate-score)
          (World.update-p &update-player-state)
-         (World.update-back-zero-x &(fn [x] (inc x)))
-         (World.update-back-one-x  &(fn [x] (+ x 3)))
          (check-for-collisions))
      _ world))
 
 (defn update-state [world]
   (=> world
       (update-world-state)
+      (update-backgrounds)
       (update-state-if-playing)))
 
 (sig update (Fn [World] World))

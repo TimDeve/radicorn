@@ -31,9 +31,14 @@
     (when (< @(x obstacle) (+ Video.screen-width (width)))
       (buffer-push (set-pos (make-obs obstacle) @(x obstacle) (y obstacle)))))))
 
-(defn render-player [player]
+(defn offset [world]
+  (match-ref (World.state world)
+    (WorldState.Intro tik) @tik
+    _                      0))
+
+(defn render-player [world]
   (with Player
-   (do
+   (let [player (World.p world)]
     (buffer-push
       (set-pos (match-ref (state player)
                   PlayerState.Jumping (make-unicorn 2)
@@ -41,7 +46,7 @@
                   (PlayerState.Running tik) (if (>= tik &15) (make-unicorn 0) (make-unicorn 1))
                   _                   (make-unicorn 0))
                @(x player)
-               @(y player))))))
+               (- @(y player) (offset world)))))))
 
 (defn-do render-background [world]
   (match-ref (World.state world)
@@ -49,12 +54,17 @@
     (do
       (Background.control-offset (Background.Zero) @(World.back-zero-x world) -95)
       (Background.control-offset (Background.One) @(World.back-one-x world) -95)
-      (Background.control-offset (Background.Two) 10 -115))
+      (Background.control-offset (Background.Two) 0 -110))
+    (WorldState.Intro tik)
+    (do
+      (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-95) -95 @tik))
+      (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-95) -95 @tik))
+      (Background.control-offset (Background.Two) 0 @tik))
     _
     (do
       (Background.control-offset (Background.Zero) @(World.back-zero-x world) 0)
       (Background.control-offset (Background.One) @(World.back-one-x world) 0)
-      (Background.control-offset (Background.Two) 10 0))))
+      (Background.control-offset (Background.Two) 0 0))))
 
 (defn-do render-score [world]
   (Text.set-pos 0 0)
@@ -65,7 +75,7 @@
   (do
    (render-score world)
    (render-obstacles (World.obstacles world))
-   (render-player (World.p world))))
+   (render-player world)))
 
 (defn-do render-paused-game [world]
   (render-playing-game world)
@@ -87,5 +97,7 @@
       WorldState.Playing   (render-playing-game world)
       WorldState.Paused    (render-paused-game world)
       (WorldState.Start _) (render-start-screen)
-      WorldState.Dead      (render-death-screen))
+      WorldState.Dead      (render-death-screen)
+      (WorldState.Intro _) (render-playing-game world)
+      _                    (Debug.halt "Unhandled match"))
     (Object.buffer-blit)))

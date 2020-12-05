@@ -64,10 +64,10 @@
     _                    (height)))
  (implements rect-height Player.hitbox-height))
 
-(deftype WorldState (Start [Int]) (Intro [Int]) Playing Paused (Outro [Int]) Dead)
+(deftype WorldState (Start [Int]) (Intro [Int]) Playing Paused Dead)
 (defmodule WorldState
- (defn new-intro [] (Intro 105))
- (defn new-outro [] (Outro 105)))
+ (defn new-intro [] (Intro -110))
+ (defn new-start [] (Start 0)))
 
 (deftype World [p Player
                 obstacles (Array Obstacle)
@@ -82,13 +82,14 @@
                 &(fn [state]
                   (match state
                     (WorldState.Start tik) (WorldState.Start (inc tik))
+                    (WorldState.Intro tik) (WorldState.Intro (+ tik 2))
                     _                      state))))
 
  (defn new []
   (World.init (Player.new)
               [(Obstacle.init 600 false (Low))]
                ; (Obstacle.init (+ 600 Video.screen-width) false (Low))]
-              (WorldState.Start 0)
+              (WorldState.new-start)
               0
               0
               0)))
