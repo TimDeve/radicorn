@@ -74,5 +74,12 @@
                          return &se_mem[map_index][0];
                        }")
 
-  (register pal-mem (Ptr ()) "pal_bg_mem"))
+  (register pal-mem (Ptr ()) "pal_bg_mem")
+
+  (defn to-int [bg]
+    (match-ref bg
+      Zero  0
+      One   1
+      Two   2
+      Three 3)))
 

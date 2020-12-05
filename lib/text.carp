@@ -1,12 +1,15 @@
 (defmodule Text
-  (deftemplate init (Fn [Int Int Int] ())
-                    "void $NAME(int bg_number, int bg_cbb, int bg_sbb)"
-                    "$DECL {
-                      tte_init_se_default(bg_number, BG_CBB(bg_cbb) | BG_SBB(bg_sbb));
-                    }")
+  (deftemplate init-internal (Fn [Int Int Int] ())
+                             "void $NAME(int bg_number, int bg_cbb, int bg_sbb)"
+                             "$DECL {
+                               tte_init_se_default(bg_number, BG_CBB(bg_cbb) | BG_SBB(bg_sbb));
+                             }")
+  (defn init [bg cbb sbb]
+    (init-internal (Background.to-int &bg) cbb sbb))
 
   (register set-pos (Fn [Int Int] ()) "tte_set_pos")
   (register erase-line (Fn [] ()) "tte_erase_line")
+  (register erase-screen (Fn [] ()) "tte_erase_screen")
   (deftemplate write (Fn [(Ref String)] Int)
                      "inline int $NAME(String *str)"
                      "$DECL {

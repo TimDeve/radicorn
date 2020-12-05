@@ -40,6 +40,9 @@
   (inline-defn unicorn-id [] 17)
   (inline-defn pal-id [] 0)
 
+  (inline-defn text-cbb [] 3)
+  (inline-defn text-sbb [] 20)
+
   (inline-defn city-cbb [] 2)
   (inline-defn city-sbb [] 31)
 
