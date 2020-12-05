@@ -57,11 +57,11 @@
 
 (defn update-obstacle-position [obs furthest-x]
   (Obstacle.init
-    (if (<= (Obstacle.x &obs) &0)
+    (if (<= (Obstacle.x &obs) &-16)
      (random-reset-position furthest-x)
      (- @(Obstacle.x &obs) 3))
     @(Obstacle.passed &obs)
-    (if (<= (Obstacle.x &obs) &0)
+    (if (<= (Obstacle.x &obs) &-16)
      (if (= 0 (Rand.range 0 10)) (ObstacleType.High) (ObstacleType.Low))
      @(Obstacle.ty &obs))))
 
@@ -85,7 +85,7 @@
       (match-ref (World.state &world)
          WorldState.Playing       (World.set-state world (WorldState.Paused))
          WorldState.Dead          (World.new)
-         (WorldState.Intro tik)   (do (Rand.set-seed @tik) (World.set-state world (WorldState.Playing)))
+         (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.set-state world (WorldState.Playing)))
          _                        (World.set-state world (WorldState.Playing)))
       (World.tick world)))
 
