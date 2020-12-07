@@ -21,6 +21,11 @@ Should produce a `radicorn.gba` file that can be played in a emulator or GBA.
 - grit (should be included in `gba-dev` package from devkitpro)
 - libtonc (should be included in `gba-dev` package from devkitpro)
 
+## License
+
+The code is released under MIT, see [LICENSE](./LICENSE).  
+The assets are released under [CC-BY](https://creativecommons.org/licenses/by/4.0/).
+
 ## Credits
 
 Inspired by the [Chrome Dino](https://en.wikipedia.org/wiki/Dinosaur_Game).
