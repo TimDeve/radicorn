@@ -62,7 +62,7 @@
      (- @(Obstacle.x &obs) 3))
     @(Obstacle.passed &obs)
     (if (<= (Obstacle.x &obs) &-16)
-     (if (= 0 (Rand.range 0 10)) (ObstacleType.High) (ObstacleType.Low))
+     (if (= 0 (Rand.range 0 5)) (ObstacleType.High) (ObstacleType.Low))
      @(Obstacle.ty &obs))))
 
 (defn update-obstacles-position [obstacles]
