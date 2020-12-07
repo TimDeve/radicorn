@@ -58,7 +58,7 @@
  (defn hitbox-width [player] (width))
  (implements rect-width Player.hitbox-width)
  (sig hitbox-height (Fn [(Ref Player)] Int))
- (defn hitbox-height [player] 
+ (defn hitbox-height [player]
   (match-ref (state player)
     PlayerState.Dodging (- (height) 16)
     _                    (height)))

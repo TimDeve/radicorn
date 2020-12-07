@@ -53,18 +53,18 @@
   (match-ref (World.state world)
     (WorldState.Start _)
     (do
-      (Background.control-offset (Background.Zero) @(World.back-zero-x world) -95)
-      (Background.control-offset (Background.One) @(World.back-one-x world) -95)
+      (Background.control-offset (Background.Zero) @(World.back-zero-x world) -96)
+      (Background.control-offset (Background.One) @(World.back-one-x world) -96)
       (Background.control-offset (Background.Two) 0 -110))
     (WorldState.Intro tik)
     (do
-      (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-95) -95 @tik))
-      (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-95) -95 @tik))
+      (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-96) -96 @tik))
+      (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-96) -96 @tik))
       (Background.control-offset (Background.Two) 0 @tik))
     (WorldState.Outro tik)
     (do
-      (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-95) -95 @tik))
-      (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-95) -95 @tik))
+      (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-96) -96 @tik))
+      (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-96) -96 @tik))
       (Background.control-offset (Background.Two) 0 @tik))
     _
     (do
