@@ -87,8 +87,8 @@
 
  (defn new []
   (World.init (Player.new)
-              [(Obstacle.init 600 false (Low))]
-               ; (Obstacle.init (+ 600 Video.screen-width) false (Low))]
+              [(Obstacle.init 600 false (Low))
+               (Obstacle.init (+ 600 Video.screen-width) false (Low))]
               (WorldState.new-start)
               0
               0
