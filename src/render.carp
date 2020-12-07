@@ -25,16 +25,17 @@
     (ObstacleType.Low) (make-bin)
     (ObstacleType.High) (make-witch)))
 
-(defn render-obstacles [obstacles]
-  (foreach [obstacle obstacles]
-   (with Obstacle
-    (when (< @(x obstacle) (+ Video.screen-width (width)))
-      (buffer-push (set-pos (make-obs obstacle) @(x obstacle) (y obstacle)))))))
-
 (defn offset [world]
   (match-ref (World.state world)
     (WorldState.Intro tik) @tik
+    (WorldState.Outro tik) @tik
     _                      0))
+
+(defn render-obstacles [world]
+  (foreach [obstacle (World.obstacles world)]
+   (with Obstacle
+    (when (< @(x obstacle) (+ Video.screen-width (width)))
+      (buffer-push (set-pos (make-obs obstacle) @(x obstacle) (- (y obstacle) (offset world))))))))
 
 (defn render-player [world]
   (with Player
@@ -60,6 +61,11 @@
       (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-95) -95 @tik))
       (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-95) -95 @tik))
       (Background.control-offset (Background.Two) 0 @tik))
+    (WorldState.Outro tik)
+    (do
+      (Background.control-offset (Background.Zero) @(World.back-zero-x world) (if (< tik &-95) -95 @tik))
+      (Background.control-offset (Background.One) @(World.back-one-x world) (if (< tik &-95) -95 @tik))
+      (Background.control-offset (Background.Two) 0 @tik))
     _
     (do
       (Background.control-offset (Background.Zero) @(World.back-zero-x world) 0)
@@ -74,20 +80,13 @@
 (defn render-playing-game [world]
   (do
    (render-score world)
-   (render-obstacles (World.obstacles world))
+   (render-obstacles world)
    (render-player world)))
 
 (defn-do render-paused-game [world]
   (render-playing-game world)
   (Text.set-pos 100 0)
   (ignore (Text.write "Paused")))
-
-(defn-do render-start-screen []
-  (Text.erase-line))
-
-(defn-do render-death-screen []
-  (Text.set-pos 70 0)
-  (ignore (Text.write "Start to try again.")))
 
 (sig render (Fn [(Ref World)] ()))
 (defn render [world]
@@ -96,8 +95,8 @@
     (match-ref (World.state world)
       WorldState.Playing   (render-playing-game world)
       WorldState.Paused    (render-paused-game world)
-      (WorldState.Start _) (render-start-screen)
-      WorldState.Dead      (render-death-screen)
+      (WorldState.Start _) ()
       (WorldState.Intro _) (render-playing-game world)
+      (WorldState.Outro _) (render-playing-game world)
       _                    (Debug.halt "Unhandled match"))
     (Object.buffer-blit)))

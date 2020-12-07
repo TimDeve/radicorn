@@ -87,13 +87,13 @@
       (if (Key.hit? Key.Start)
           (match-ref (World.state &wrld)
              WorldState.Playing       (World.set-state wrld (WorldState.Paused))
-             WorldState.Dead          (World.new)
-             (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.set-state wrld (WorldState.new-intro)))
+             (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.start wrld))
              WorldState.Paused        (World.set-state wrld (WorldState.Playing))
              _                        wrld)
 
           (match-ref (World.state &wrld)
              (WorldState.Intro tik)   (if (>= tik &0) (World.set-state wrld (WorldState.Playing)) wrld)
+             (WorldState.Outro tik)   (if (<= tik &-110) (World.set-state wrld (WorldState.new-start)) wrld)
              _                        wrld))))))
 
 (defn check-for-collisions [world]
@@ -104,7 +104,7 @@
            &(fn [obs] (rect-colliding? (World.p world*)
                                        obs))
            (World.obstacles world*))
-        (WorldState.Dead)
+        (WorldState.new-outro)
         (WorldState.Playing))))))
 
 (defn obs-past-player [obs] (< (Obstacle.x obs) &8))

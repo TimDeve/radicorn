@@ -64,9 +64,10 @@
     _                    (height)))
  (implements rect-height Player.hitbox-height))
 
-(deftype WorldState (Start [Int]) (Intro [Int]) Playing Paused Dead)
+(deftype WorldState (Start [Int]) (Intro [Int]) Playing Paused (Outro [Int]))
 (defmodule WorldState
  (defn new-intro [] (Intro -110))
+ (defn new-outro [] (Outro 0))
  (defn new-start [] (Start 0)))
 
 (deftype World [p Player
@@ -83,6 +84,7 @@
                   (match state
                     (WorldState.Start tik) (WorldState.Start (inc tik))
                     (WorldState.Intro tik) (WorldState.Intro (+ tik 2))
+                    (WorldState.Outro tik) (WorldState.Outro (- tik 4))
                     _                      state))))
 
  (defn new []
@@ -92,5 +94,11 @@
               (WorldState.new-start)
               0
               0
-              0)))
+              0))
+
+ (defn start [world]
+  (=> (new)
+      (set-state (WorldState.new-intro))
+      (set-back-zero-x @(back-zero-x &world))
+      (set-back-one-x @(back-one-x &world)))))
 
