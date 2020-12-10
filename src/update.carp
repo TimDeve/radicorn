@@ -4,6 +4,7 @@
 
 (load "./collisions.carp")
 (load "./models.carp")
+(load "./jump.carp")
 
 (defn jump-button? []
  (with Key
@@ -13,8 +14,8 @@
   (with Key
     (with Player
       (match-ref (state &player)
-        PlayerState.Jumping (update-y player &(fn [y] (- y 2)))
-        PlayerState.Falling (update-y player &(fn [y] (+ y 2)))
+        PlayerState.Jumping (update-y player &(fn [y] (jump-jumping y)))
+        PlayerState.Falling (update-y player &(fn [y] (jump-falling y)))
         _                   player))))
 
 (defn update-player-state [player]
@@ -26,10 +27,10 @@
                                   (if (is-down? Down)
                                     (set-state player (PlayerState.Dodging))
                                     (tick player)))
-        PlayerState.Jumping     (if (<= (y &player) &(- floor-y 75))
+        PlayerState.Jumping     (if (<= (y &player) &45)
                                   (set-state player (PlayerState.Falling))
                                   player)
-        PlayerState.Falling     (if (>= (y &player) &(- floor-y (height)))
+        PlayerState.Falling     (if (>= (y &player) &88)
                                   (set-state player (PlayerState.Running 1))
                                   player)
         PlayerState.Dodging     (if (is-down? Down)
