@@ -164,10 +164,10 @@ clean:
 	@rm -rf built-assets
 
 test:
-	@./tests.sh
+	@./scripts/tests
 
 run: $(BUILD)
-	@hash xdg-open 2>/dev/null && xdg-open $(TARGET).gba || open $(TARGET).gba
+	@./scripts/open $(TARGET).gba
 
 #---------------------------------------------------------------------------------
 else

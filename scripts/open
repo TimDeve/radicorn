@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+if hash wsl-open 2>/dev/null; then
+  wsl-open $@
+elif hash xdg-open 2>/dev/null; then
+  xdg-open $@
+else
+  open $@
+fi
