@@ -1,5 +1,6 @@
-(defn jump-jumping [y]
-  (case y
+(defmodule JumpMap
+ (defn jumping [y]
+   (case y
     88 85
     85 82
     82 79
@@ -24,9 +25,8 @@
     45 44
     88))
 
-
-(defn jump-falling [y]
-  (case y
+ (defn falling [y]
+   (case y
     44 45
     45 46
     46 47
@@ -49,4 +49,5 @@
     79 82
     82 85
     85 88
-    44))
+    44)))
+

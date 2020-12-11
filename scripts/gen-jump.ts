@@ -12,29 +12,29 @@ for (let i = 0; i <= 100; i++) {
   if (y >= 88) { break }
 }
 
-let codeJumpFalling = "(defn jump-falling [y]\n  (case y\n"
-
-for (let i = 0; i < steps.length; i++) {
-  if (i != 0 && (steps[i] != steps[i-1])) {
-    codeJumpFalling += `    ${steps[i-1]} ${steps[i]}\n`
-  }
-}
-
-codeJumpFalling += `    ${steps[0]}))\n`
-
-console.log(codeJumpFalling)
-
-let codeJumpJumping = "(defn jump-jumping [y]\n  (case y\n"
+let codeJumping = " (defn jumping [y]\n   (case y\n"
 
 for (let i = steps.length - 1; i > 0; i--) {
   if (i != 0 && (steps[i] != steps[i-1])) {
-    codeJumpJumping += `    ${steps[i]} ${steps[i-1]}\n`
+    codeJumping += `    ${steps[i]} ${steps[i-1]}\n`
   }
 }
 
-codeJumpJumping += `    ${steps[steps.length - 1]}))\n`
+codeJumping += `    ${steps[steps.length - 1]}))\n`
 
-console.log(codeJumpJumping)
+let codeFalling = " (defn falling [y]\n   (case y\n"
 
-await Deno.writeTextFile("src/jump.carp", codeJumpJumping + "\n\n" + codeJumpFalling)
+for (let i = 0; i < steps.length; i++) {
+  if (i != 0 && (steps[i] != steps[i-1])) {
+    codeFalling += `    ${steps[i-1]} ${steps[i]}\n`
+  }
+}
+
+codeFalling += `    ${steps[0]}))`
+
+const code = `(defmodule JumpMap\n${codeJumping}\n${codeFalling})\n`
+
+console.log(code)
+
+await Deno.writeTextFile("src/jump.carp", code + "\n")
 

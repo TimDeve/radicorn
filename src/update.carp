@@ -14,8 +14,8 @@
   (with Key
     (with Player
       (match-ref (state &player)
-        PlayerState.Jumping (update-y player &(fn [y] (jump-jumping y)))
-        PlayerState.Falling (update-y player &(fn [y] (jump-falling y)))
+        PlayerState.Jumping (update-y player &(fn [y] (JumpMap.jumping y)))
+        PlayerState.Falling (update-y player &(fn [y] (JumpMap.falling y)))
         _                   player))))
 
 (defn update-player-state [player]
@@ -135,9 +135,9 @@
 (defn update-backgrounds [world]
   (match-ref (World.state &world)
      (WorldState.Paused) world
-     _                  (=> world
-                         (World.update-back-zero-x &(fn [x] (inc x)))
-                         (World.update-back-one-x  &(fn [x] (+ x 3))))))
+     _                   (=> world
+                          (World.update-back-zero-x &(fn [x] (inc x)))
+                          (World.update-back-one-x  &(fn [x] (+ x 3))))))
 
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
