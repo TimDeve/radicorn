@@ -6,6 +6,20 @@
 (load "./models.carp")
 (load "./jump.carp")
 
+(defn city-speed [world]
+  (match-ref (World.speed world)
+    Speed.One   1
+    Speed.Two   1
+    Speed.Three 2
+    Speed.Four  2))
+
+(defn ground-speed [world]
+  (match-ref (World.speed world)
+    Speed.One   2
+    Speed.Two   3
+    Speed.Three 4
+    Speed.Four  5))
+
 (defn jump-button? []
  (with Key
   (or (is-down? A) (is-down? Up))))
@@ -57,30 +71,30 @@
       (+ @furthest-x (Rand.range 130 400))
       new-pos)))
 
-(defn update-obstacle-position [obs furthest-x]
+(defn update-obstacle-position [obs furthest-x speed]
   (Obstacle.init
     (if (<= (Obstacle.x &obs) &-16)
      (random-reset-position furthest-x)
-     (- @(Obstacle.x &obs) 3))
+     (- @(Obstacle.x &obs) speed))
     @(Obstacle.passed &obs)
     (if (<= (Obstacle.x &obs) &-16)
      (if (= 0 (Rand.range 0 5)) (ObstacleType.High) (ObstacleType.Low))
      @(Obstacle.ty &obs))))
 
-(defn update-obstacles-position [obstacles]
+(defn update-obstacles-position [obstacles speed]
   (let [furthest-x (furthest-obstacle &obstacles)]
     (Array.endo-map
-     &(fn [obs] (update-obstacle-position obs &furthest-x))
+     &(fn [obs] (update-obstacle-position obs &furthest-x @&speed))
      obstacles)))
 
 (defn update-position [world]
-  (match-ref (World.state &world)
-    WorldState.Playing
-    (=> world
-        (World.update-p &update-player-position)
-        (World.update-obstacles &update-obstacles-position))
-
-    _ world))
+  (let [speed (ground-speed &world)]
+    (match-ref (World.state &world)
+      WorldState.Playing
+      (=> world
+          (World.update-p &update-player-position)
+          (World.update-obstacles &(fn [obstacles] (update-obstacles-position obstacles speed))))
+      _ world)))
 
 (defn update-world-state [world]
   (=> world
@@ -135,9 +149,11 @@
 (defn update-backgrounds [world]
   (match-ref (World.state &world)
      (WorldState.Paused) world
-     _                   (=> world
-                          (World.update-back-zero-x &(fn [x] (inc x)))
-                          (World.update-back-one-x  &(fn [x] (+ x 3))))))
+     _ (let [back-zero (+ @(World.back-zero-x &world) (city-speed &world))
+             back-one  (+ @(World.back-one-x &world) (ground-speed &world))]
+         (=> world
+          (World.set-back-zero-x back-zero)
+          (World.set-back-one-x  back-one)))))
 
 (defn update-state-if-playing [world]
   (match-ref (World.state &world)
@@ -148,9 +164,21 @@
          (check-for-collisions))
      _ world))
 
+(defn update-speed [world]
+  (let [score (World.score &world)]
+   (World.set-speed world
+                    (if (< score &10)
+                     (Speed.One)
+                     (if (< score &30)
+                       (Speed.Two)
+                       (if (< score &50)
+                        (Speed.Three)
+                        (Speed.Four)))))))
+
 (defn update-state [world]
   (=> world
       (update-world-state)
+      (update-speed)
       (update-backgrounds)
       (update-state-if-playing)))
 

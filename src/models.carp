@@ -64,6 +64,8 @@
     _                    (height)))
  (implements rect-height Player.hitbox-height))
 
+(deftype Speed One Two Three Four)
+
 (deftype WorldState (Start [Int]) (Intro [Int]) Playing Paused (Outro [Int]))
 (defmodule WorldState
  (defn new-intro [] (Intro -110))
@@ -74,6 +76,7 @@
                 obstacles (Array Obstacle)
                 state WorldState
                 score Int
+                speed Speed
                 back-zero-x Int
                 back-one-x Int])
 
@@ -93,6 +96,7 @@
                (Obstacle.init (+ 600 Video.screen-width) false (Low))]
               (WorldState.new-start)
               0
+              (Speed.One)
               0
               0))
 
