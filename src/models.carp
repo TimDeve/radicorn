@@ -9,14 +9,11 @@
 (deftype Obstacle [x Int passed Bool ty ObstacleType])
 (defmodule Obstacle
  (defn height [] 16)
- (annotate height "inline")
  (defn width [] 16)
- (annotate width "inline")
  (defn y [obs]
   (match-ref (ty obs)
     Low (- floor-y (height))
     High (- floor-y (+ (height) (height)))))
- (annotate y "inline")
 
  (defn hitbox-x-pos [obs] @(x obs))
  (implements x-pos Obstacle.hitbox-x-pos)
@@ -34,9 +31,7 @@
 (deftype Player [x Int y Int state PlayerState])
 (defmodule Player
  (defn height [] 32)
- (annotate height "inline")
  (defn width [] 16)
- (annotate width "inline")
  (defn new [] (Player.init 20 (- @&floor-y (height)) (PlayerState.Running 1)))
 
  (defn tick [player]
@@ -93,7 +88,7 @@
  (defn new []
   (World.init (Player.new)
               [(Obstacle.init 600 false (Low))
-               (Obstacle.init (+ 600 Video.screen-width) false (Low))]
+               (Obstacle.init (+ 600 240) false (Low))]
               (WorldState.new-start)
               0
               (Speed.One)

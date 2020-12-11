@@ -1,0 +1,37 @@
+(Debug.sanitize-addresses)
+
+(load "Test.carp")
+
+; --- Stubs
+(defmodule Math
+  (defn sqrt [int] (Float.to-int (Float.sqrt (Float.from-int int)))))
+
+(defmodule Rand
+ (defn range [start end] 0)
+ (defn set-seed [seed] ()))
+
+(defmodule Video
+ (deftemplate screen-width Int "int $NAME=0" ""))
+
+(defmodule Key
+ (deftemplate A Int "int $NAME=0" "")
+ (deftemplate Up Int "int $NAME=1" "")
+ (deftemplate Down Int "int $NAME=2" "")
+ (deftemplate Start Int "int $NAME=3" "")
+ (defn is-down? [key] false)
+ (defn hit? [key] false))
+; --- Stubs
+
+(load "./collisions.carp")
+(load "./models.carp")
+(load "./update.carp")
+
+(use Test)
+
+(deftest test
+  (assert-true test
+               (do
+                (ignore (update (World.set-state (World.new) (WorldState.Playing))))
+                true)
+               "Doesn't leak when in playing state"))
+

@@ -1,9 +1,3 @@
-(load "../lib/key.carp")
-(load "../lib/video.carp")
-(load "../lib/rand.carp")
-
-(load "./collisions.carp")
-(load "./models.carp")
 (load "./jump.carp")
 
 (defn city-speed [world]
@@ -88,12 +82,13 @@
      obstacles)))
 
 (defn update-position [world]
-  (let [speed (ground-speed &world)]
+  (let [speed (ground-speed &world)
+        obs-updater (fn [obstacles] (update-obstacles-position obstacles speed))]
     (match-ref (World.state &world)
       WorldState.Playing
       (=> world
           (World.update-p &update-player-position)
-          (World.update-obstacles &(fn [obstacles] (update-obstacles-position obstacles speed))))
+          (World.update-obstacles &obs-updater))
       _ world)))
 
 (defn update-world-state [world]
