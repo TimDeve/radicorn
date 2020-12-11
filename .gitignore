@@ -3,5 +3,6 @@ radicorn.elf
 radicorn.gba
 radicorn.sav
 out
+out-tests
 built-assets
 

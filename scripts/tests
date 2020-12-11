@@ -3,6 +3,6 @@ set -Eeuo pipefail
 
 for f in ./src/*_test.carp; do
   echo $f
-  carp -x --log-memory $f
+  carp -x --log-memory --eval-preload '(Project.config "output-directory" "out-tests")' $f
 done
 
