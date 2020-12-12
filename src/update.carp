@@ -1,14 +1,14 @@
 (load "./jump.carp")
 
-(defn city-speed [world]
-  (match-ref (World.speed world)
+(defn city-speed [speed]
+  (match-ref speed
     Speed.One   1
     Speed.Two   1
     Speed.Three 2
     Speed.Four  2))
 
-(defn ground-speed [world]
-  (match-ref (World.speed world)
+(defn ground-speed [speed]
+  (match-ref speed
     Speed.One   2
     Speed.Two   3
     Speed.Three 4
@@ -55,21 +55,27 @@
     0
     obs))
 
-(defn too-close-to-other-obstacle? [new-pos furthest-x]
-  (or (and (<= new-pos furthest-x) (>= @new-pos (- @furthest-x 110)))
-      (and (>= new-pos furthest-x) (<= @new-pos (+ @furthest-x 110)))))
+(defn min-distance-obstacles [speed]
+  (match-ref speed
+    Speed.Four 140
+    _          110))
 
-(defn random-reset-position [furthest-x]
+(defn too-close-to-other-obstacle? [new-pos furthest-x speed]
+ (let [distance &(min-distance-obstacles speed)]
+  (or (and (<= new-pos furthest-x) (>= @new-pos (- @furthest-x @distance)))
+      (and (>= new-pos furthest-x) (<= @new-pos (+ @furthest-x @distance))))))
+
+(defn random-reset-position [furthest-x speed]
   (let [new-pos (+ (Rand.range 0 120) Video.screen-width)]
-    (if (too-close-to-other-obstacle? &new-pos furthest-x)
-      (+ @furthest-x (Rand.range 130 400))
+    (if (too-close-to-other-obstacle? &new-pos furthest-x speed)
+      (+ @furthest-x (Rand.range (+ (min-distance-obstacles speed) 20) 400))
       new-pos)))
 
 (defn update-obstacle-position [obs furthest-x speed]
   (Obstacle.init
     (if (<= (Obstacle.x &obs) &-16)
-     (random-reset-position furthest-x)
-     (- @(Obstacle.x &obs) speed))
+     (random-reset-position furthest-x speed)
+     (- @(Obstacle.x &obs) (ground-speed speed)))
     @(Obstacle.passed &obs)
     (if (<= (Obstacle.x &obs) &-16)
      (if (= 0 (Rand.range 0 5)) (ObstacleType.High) (ObstacleType.Low))
@@ -78,17 +84,17 @@
 (defn update-obstacles-position [obstacles speed]
   (let [furthest-x (furthest-obstacle &obstacles)]
     (Array.endo-map
-     &(fn [obs] (update-obstacle-position obs &furthest-x @&speed))
+     &(fn [obs] (update-obstacle-position obs &furthest-x speed))
      obstacles)))
 
 (defn update-position [world]
-  (let [speed (ground-speed &world)
-        obs-updater (fn [obstacles] (update-obstacles-position obstacles speed))]
+  (let [speed (World.speed &world)
+        obs-updater &(fn [obstacles] (update-obstacles-position obstacles speed))]
     (match-ref (World.state &world)
       WorldState.Playing
       (=> world
           (World.update-p &update-player-position)
-          (World.update-obstacles &obs-updater))
+          (World.update-obstacles obs-updater))
       _ world)))
 
 (defn update-world-state [world]
@@ -144,8 +150,8 @@
 (defn update-backgrounds [world]
   (match-ref (World.state &world)
      (WorldState.Paused) world
-     _ (let [back-zero (+ @(World.back-zero-x &world) (city-speed &world))
-             back-one  (+ @(World.back-one-x &world) (ground-speed &world))]
+     _ (let [back-zero (+ @(World.back-zero-x &world) (city-speed (World.speed &world)))
+             back-one  (+ @(World.back-one-x &world) (ground-speed (World.speed &world)))]
          (=> world
           (World.set-back-zero-x back-zero)
           (World.set-back-one-x  back-one)))))
