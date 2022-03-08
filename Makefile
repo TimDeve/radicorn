@@ -110,62 +110,46 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: $(BUILD) clean test
 .DEFAULT_GOAL := $(BUILD)
 
 built-assets:
 	@mkdir -p built-assets
 
-built-assets/bin.h: assets/bin.png built-assets
-	@grit assets/bin.png -p! -gB8 -o ./built-assets/bin
+built-assets/%.h: assets/sprite-%.png built-assets
+	grit $< -p! -gB8 -o $@
 
-built-assets/witch.h: assets/witch.png built-assets
-	@grit assets/witch.png -p! -gB8 -o ./built-assets/witch 
-
-built-assets/unicorn.h: assets/unicorn.png built-assets
-	@grit assets/unicorn.png -p! -gB8 -o ./built-assets/unicorn
+built-assets/%.h: assets/map-%.png built-assets
+	grit $< -p! -gB8 -mRtf -o $@
 
 built-assets/pal.h: assets/pal.png built-assets
-	@grit assets/pal.png -pn32 -g! -o ./built-assets/pal
+	grit assets/pal.png -pn32 -g! -o ./built-assets/pal
 
-built-assets/backcity.h: assets/backcity.png built-assets
-	@grit assets/backcity.png -p! -gB8 -mRtf -o ./built-assets/backcity
-
-built-assets/backsky.h: assets/backsky.png built-assets
-	@grit assets/backsky.png -p! -gB8 -mRtf -o ./built-assets/backsky
-
-built-assets/backearth.h: assets/backearth.png built-assets
-	@grit assets/backearth.png -p! -gB8 -mRtf -o ./built-assets/backearth
-
-ASSETS = \
-	 built-assets/bin.h \
-	 built-assets/witch.h \
-	 built-assets/unicorn.h \
-	 built-assets/pal.h \
-	 built-assets/backcity.h \
-	 built-assets/backearth.h \
-	 built-assets/backsky.h
+ASSETS = $(patsubst assets/sprite-%.png, built-assets/%.h, $(wildcard assets/sprite-*.png)) \
+         $(patsubst assets/map-%.png, built-assets/%.h, $(wildcard assets/map-*.png)) \
+         built-assets/pal.h \
 
 out/main.c: $(wildcard **/*.carp) $(wildcard *.carp)
-	@echo --- Carp Compilation
-	@carp --no-core -b main.carp
+	carp --no-core -b main.carp
 
 #---------------------------------------------------------------------------------
 
-$(BUILD): out/main.c $(ASSETS)
+.PHONY: $(BUILD)
+$(BUILD): $(ASSETS) out/main.c
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
+.PHONY: clean
 clean:
-	@echo --- Clean
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).gba
+	@rm -rf $(BUILD) $(TARGET).elf $(TARGET).gba $(TARGET).map
 	@rm -rf out
 	@rm -rf built-assets
 
+.PHONY: test
 test:
 	@./scripts/tests
 
+.PHONY: run
 run: $(BUILD)
 	@./scripts/open $(TARGET).gba
 

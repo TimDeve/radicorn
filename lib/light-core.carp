@@ -56,13 +56,13 @@
 ; (load-once "Map.carp")
 (load-once "Heap.carp")
 (load-once "Sort.carp")
-(load-once "Binary.carp")
+; (load-once "Binary.carp")
 (load-once "Control.carp")
 (load-once "Opaque.carp")
 ; (load-once "Unit.carp")
 
-(posix-only
- (system-include "sys/wait.h")
- (system-include "unistd.h")
- (system-include "signal.h"))
+; (posix-only
+;  (system-include "sys/wait.h")
+;  (system-include "unistd.h")
+;  (system-include "signal.h"))
 

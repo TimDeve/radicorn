@@ -97,21 +97,19 @@
           (World.update-obstacles obs-updater))
       _ world)))
 
-(defn update-world-state [world]
-  (=> world
-    (World.tick)
-    ((fn [wrld]
-      (if (Key.hit? Key.Start)
-          (match-ref (World.state &wrld)
-             WorldState.Playing       (World.set-state wrld (WorldState.Paused))
-             (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.start wrld))
-             WorldState.Paused        (World.set-state wrld (WorldState.Playing))
-             _                        wrld)
+(defn update-world-state [old-world]
+  (let [world (World.tick old-world)]
+    (if (Key.hit? Key.Start)
+        (match-ref (World.state &world)
+           WorldState.Playing       (World.set-state world (WorldState.Paused))
+           (WorldState.Start tik)   (do (Rand.set-seed @tik) (World.start world))
+           WorldState.Paused        (World.set-state world (WorldState.Playing))
+           _                        world)
 
-          (match-ref (World.state &wrld)
-             (WorldState.Intro tik)   (if (>= tik &0) (World.set-state wrld (WorldState.Playing)) wrld)
-             (WorldState.Outro tik)   (if (<= tik &-110) (World.set-state wrld (WorldState.new-start)) wrld)
-             _                        wrld))))))
+        (match-ref (World.state &world)
+           (WorldState.Intro tik)   (if (>= tik &0) (World.set-state world (WorldState.Playing)) world)
+           (WorldState.Outro tik)   (if (<= tik &-110) (World.set-state world (WorldState.new-start)) world)
+           _                        world))))
 
 (defn check-for-collisions [world]
   (let [world* &world]
